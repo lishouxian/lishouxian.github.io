@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lishx.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="背景介绍语义分割图像语义分割(Semantic Segmentation)是指让计算机根据图像的语义来进行分割。语义分割有很多应用，例如在自动驾驶领域如何去识别汽车、行人、信号灯、车道线等具有特殊意义的道路标志是实现自动驾驶的前提。同时在OCR即文字的识别上也有广泛的应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UNet应用于轮毂背景分割">
+<meta property="og:url" content="lishx.com/2019/12/01/algorithm/unet-ying-yong-yu-lun-gu-bei-jing-fen-ge/index.html">
+<meta property="og:site_name" content="lishouxian&#39;s BLOG">
+<meta property="og:description" content="背景介绍语义分割图像语义分割(Semantic Segmentation)是指让计算机根据图像的语义来进行分割。语义分割有很多应用，例如在自动驾驶领域如何去识别汽车、行人、信号灯、车道线等具有特殊意义的道路标志是实现自动驾驶的前提。同时在OCR即文字的识别上也有广泛的应用。">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.postimg.cc/W4DX9fHZ/unet.png">
+<meta property="article:published_time" content="2019-12-01T12:03:26.000Z">
+<meta property="article:modified_time" content="2020-09-05T08:51:22.299Z">
+<meta property="article:author" content="李寿贤">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.postimg.cc/W4DX9fHZ/unet.png">
+
+<link rel="canonical" href="lishx.com/2019/12/01/algorithm/unet-ying-yong-yu-lun-gu-bei-jing-fen-ge/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>UNet应用于轮毂背景分割 | lishouxian's BLOG</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lishouxian's BLOG</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="lishx.com/2019/12/01/algorithm/unet-ying-yong-yu-lun-gu-bei-jing-fen-ge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="李寿贤">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lishouxian's BLOG">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          UNet应用于轮毂背景分割
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-01 20:03:26" itemprop="dateCreated datePublished" datetime="2019-12-01T20:03:26+08:00">2019-12-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-05 16:51:22" itemprop="dateModified" datetime="2020-09-05T16:51:22+08:00">2020-09-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/01/algorithm/unet-ying-yong-yu-lun-gu-bei-jing-fen-ge/" class="post-meta-item leancloud_visitors" data-flag-title="UNet应用于轮毂背景分割" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2019/12/01/algorithm/unet-ying-yong-yu-lun-gu-bei-jing-fen-ge/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/01/algorithm/unet-ying-yong-yu-lun-gu-bei-jing-fen-ge/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h1><h2 id="语义分割"><a href="#语义分割" class="headerlink" title="语义分割"></a>语义分割</h2><p>图像语义分割(Semantic Segmentation)是指让计算机根据图像的语义来进行分割。语义分割有很多应用，例如在自动驾驶领域如何去识别汽车、行人、信号灯、车道线等具有特殊意义的道路标志是实现自动驾驶的前提。同时在OCR即文字的识别上也有广泛的应用。</p>
+<a id="more"></a>
+
+<h2 id="UNet"><a href="#UNet" class="headerlink" title="UNet"></a>UNet</h2><p>UNet网络是一种首先应用在医学上，识别细胞等组织结构的一种深度学习网络，因为其效果较好，故在分割图像上应用很多，UNet自从2015年问世以来，已经成为多种场合的使用网络其中包括地质勘探，深海云层分析等，本文首次实现将UNet应用在汽车轮毂的背景去除，经过40张标记模型的训练其效果较好，故在此分享。</p>
+<h1 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h1><h2 id="数据集处理"><a href="#数据集处理" class="headerlink" title="数据集处理"></a>数据集处理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset</span><br><span class="line"><span class="keyword">import</span> PIL.Image <span class="keyword">as</span> Image</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># 从路径中读入图片</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_dataset</span>(<span class="params">root</span>):</span></span><br><span class="line">    imgs=[]</span><br><span class="line">    n=<span class="number">40</span></span><br><span class="line">    root1 = root + <span class="string">&#x27;/train&#x27;</span></span><br><span class="line">    root2 = root + <span class="string">&#x27;/mark&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,n+<span class="number">1</span>):</span><br><span class="line">        img=os.path.join(root1,<span class="string">&quot;%03d.png&quot;</span>%i)</span><br><span class="line">        mask=os.path.join(root2,<span class="string">&quot;%03d.png&quot;</span>%i)</span><br><span class="line">        imgs.append((img,mask))</span><br><span class="line">    <span class="keyword">return</span> imgs</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LiverDataset</span>(<span class="params">Dataset</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, root, transform=None, target_transform=None</span>):</span></span><br><span class="line">        imgs = make_dataset(root)</span><br><span class="line">        self.imgs = imgs</span><br><span class="line">        self.transform = transform</span><br><span class="line">        self.target_transform = target_transform</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span>(<span class="params">self, index</span>):</span></span><br><span class="line">        x_path, y_path = self.imgs[index]</span><br><span class="line">        img_x = Image.open(x_path)</span><br><span class="line">        img_y = Image.open(y_path)</span><br><span class="line">        <span class="keyword">if</span> self.transform <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            img_x = self.transform(img_x)</span><br><span class="line">        <span class="keyword">if</span> self.target_transform <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            img_y = self.target_transform(img_y)</span><br><span class="line">        <span class="keyword">return</span> img_x, img_y</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> len(self.imgs)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>对于一般的语义识别数据集处理主要分为两个部分，分别是原始图片的处理，标签的生成及输入。对于原始图片由于现成的汽车轮毂图片并没有相对应的标签，第一步是使用photoshop等软件将原始图片的数据转为背景和本体分别为黑白的标记图及其灰度图的灰度值分别为255和0，并将这些原始图片和标签图片的名称相对应以便使用Dataloader读入。<br>在这里主要是要是用transfer 函数进行数据集的转换其中包括，图片大小的缩放，对图片的随机剪裁和归一化处理等，主要是为了加强数据集的数据效果。其中主要的图片部分包括，这一部分在以后可以详细了解。</p>
+<h2 id="UNet网络"><a href="#UNet网络" class="headerlink" title="UNet网络"></a>UNet网络</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoubleConv</span>(<span class="params">nn.Module</span>):</span> <span class="comment"># 构建两重卷积的方法</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, in_ch, out_ch</span>):</span></span><br><span class="line">        super(DoubleConv, self).__init__()</span><br><span class="line">        self.conv = nn.Sequential(</span><br><span class="line">            nn.Conv2d(in_ch, out_ch, <span class="number">3</span>, padding=<span class="number">1</span>),</span><br><span class="line">            nn.BatchNorm2d(out_ch),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">            nn.Conv2d(out_ch, out_ch, <span class="number">3</span>, padding=<span class="number">1</span>),</span><br><span class="line">            nn.BatchNorm2d(out_ch),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, input</span>):</span></span><br><span class="line">        <span class="keyword">return</span> self.conv(input)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Unet</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self,in_ch,out_ch</span>):</span></span><br><span class="line">        super(Unet, self).__init__()</span><br><span class="line"></span><br><span class="line">        self.conv1 = DoubleConv(in_ch, <span class="number">64</span>)</span><br><span class="line">        self.pool1 = nn.MaxPool2d(<span class="number">2</span>)</span><br><span class="line">        self.conv2 = DoubleConv(<span class="number">64</span>, <span class="number">128</span>)</span><br><span class="line">        self.pool2 = nn.MaxPool2d(<span class="number">2</span>)</span><br><span class="line">        self.conv3 = DoubleConv(<span class="number">128</span>, <span class="number">256</span>)</span><br><span class="line">        self.pool3 = nn.MaxPool2d(<span class="number">2</span>)</span><br><span class="line">        self.conv4 = DoubleConv(<span class="number">256</span>, <span class="number">512</span>)</span><br><span class="line">        self.pool4 = nn.MaxPool2d(<span class="number">2</span>)</span><br><span class="line">        self.conv5 = DoubleConv(<span class="number">512</span>, <span class="number">1024</span>)</span><br><span class="line">        self.up6 = nn.ConvTranspose2d(<span class="number">1024</span>, <span class="number">512</span>, <span class="number">2</span>, stride=<span class="number">2</span>)</span><br><span class="line">        self.conv6 = DoubleConv(<span class="number">1024</span>, <span class="number">512</span>)</span><br><span class="line">        self.up7 = nn.ConvTranspose2d(<span class="number">512</span>, <span class="number">256</span>, <span class="number">2</span>, stride=<span class="number">2</span>)</span><br><span class="line">        self.conv7 = DoubleConv(<span class="number">512</span>, <span class="number">256</span>)</span><br><span class="line">        self.up8 = nn.ConvTranspose2d(<span class="number">256</span>, <span class="number">128</span>, <span class="number">2</span>, stride=<span class="number">2</span>)</span><br><span class="line">        self.conv8 = DoubleConv(<span class="number">256</span>, <span class="number">128</span>)</span><br><span class="line">        self.up9 = nn.ConvTranspose2d(<span class="number">128</span>, <span class="number">64</span>, <span class="number">2</span>, stride=<span class="number">2</span>)</span><br><span class="line">        self.conv9 = DoubleConv(<span class="number">128</span>, <span class="number">64</span>)</span><br><span class="line">        self.conv10 = nn.Conv2d(<span class="number">64</span>,out_ch, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self,x</span>):</span></span><br><span class="line">        c1=self.conv1(x)</span><br><span class="line">        p1=self.pool1(c1)</span><br><span class="line">        c2=self.conv2(p1)</span><br><span class="line">        p2=self.pool2(c2)</span><br><span class="line">        c3=self.conv3(p2)</span><br><span class="line">        p3=self.pool3(c3)</span><br><span class="line">        c4=self.conv4(p3)</span><br><span class="line">        p4=self.pool4(c4)</span><br><span class="line">        c5=self.conv5(p4)</span><br><span class="line">        up_6= self.up6(c5)</span><br><span class="line">        merge6 = torch.cat([up_6, c4], dim=<span class="number">1</span>)</span><br><span class="line">        c6=self.conv6(merge6)</span><br><span class="line">        up_7=self.up7(c6)</span><br><span class="line">        merge7 = torch.cat([up_7, c3], dim=<span class="number">1</span>)</span><br><span class="line">        c7=self.conv7(merge7)</span><br><span class="line">        up_8=self.up8(c7)</span><br><span class="line">        merge8 = torch.cat([up_8, c2], dim=<span class="number">1</span>)</span><br><span class="line">        c8=self.conv8(merge8)</span><br><span class="line">        up_9=self.up9(c8)</span><br><span class="line">        merge9=torch.cat([up_9,c1],dim=<span class="number">1</span>)</span><br><span class="line">        c9=self.conv9(merge9)</span><br><span class="line">        c10=self.conv10(c9)</span><br><span class="line">        <span class="comment">#out = nn.Sigmoid()(c10)</span></span><br><span class="line">        <span class="keyword">return</span> c10</span><br></pre></td></tr></table></figure>
+
+<p>UNet的网络并不复杂，主要是将其的高分辨率部分和低分辨率部分相结合故能取得不错的训练效果。<br>UNet的网络结构如下图所示，先对原始图像进行下采样然后进行上采样<br><img src="https://i.postimg.cc/W4DX9fHZ/unet.png" alt="标记示例"></p>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_model</span>(<span class="params">model, criterion, optimizer, dataload, num_epochs=<span class="number">20</span></span>):</span> <span class="comment">#num_epoch为训练的轮数</span></span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(num_epochs):</span><br><span class="line">        print(<span class="string">&#x27;Epoch &#123;&#125;/&#123;&#125;&#x27;</span>.format(epoch, num_epochs - <span class="number">1</span>))</span><br><span class="line">        print(<span class="string">&#x27;-&#x27;</span> * <span class="number">10</span>)</span><br><span class="line">        dt_size = len(dataload.dataset)</span><br><span class="line">        epoch_loss = <span class="number">0</span></span><br><span class="line">        step = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> x, y <span class="keyword">in</span> dataload:</span><br><span class="line">            step += <span class="number">1</span></span><br><span class="line">            inputs = x.to(device)</span><br><span class="line">            labels = y.to(device)</span><br><span class="line">            <span class="comment"># zero the parameter gradients</span></span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line">            <span class="comment"># forward</span></span><br><span class="line">            outputs = model(inputs)</span><br><span class="line">            loss = criterion(outputs, labels)</span><br><span class="line">            loss.backward()</span><br><span class="line">            optimizer.step()</span><br><span class="line">            epoch_loss += loss.item()</span><br><span class="line">            print(<span class="string">&quot;%d/%d,train_loss:%0.3f&quot;</span> % (step, (dt_size - <span class="number">1</span>) // dataload.batch_size + <span class="number">1</span>, loss.item()))</span><br><span class="line">        print(<span class="string">&quot;epoch %d loss:%0.3f&quot;</span> % (epoch, epoch_loss/step)) <span class="comment"># 输出当前轮的训练结果</span></span><br><span class="line">        torch.save(model.state_dict(), <span class="string">&#x27;weights_%d.pth&#x27;</span> % epoch) <span class="comment">#每训练一轮保存当前轮的训练模型</span></span><br><span class="line">    <span class="keyword">return</span> model</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练模型</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span>():</span></span><br><span class="line">    model = Unet(<span class="number">3</span>, <span class="number">1</span>).to(device)  <span class="comment"># 调入训练网络 </span></span><br><span class="line">    batch_size = args.batch_size   <span class="comment"># 从输入设置batch_size</span></span><br><span class="line">    criterion = nn.BCEWithLogitsLoss()<span class="comment"># 设置损失函数</span></span><br><span class="line">    optimizer = optim.Adam(model.parameters()) <span class="comment"># 优化器的方法</span></span><br><span class="line">    liver_dataset = LiverDataset(<span class="string">&quot;D:/Data/yuyifenge&quot;</span>,transform=x_transforms,target_transform=y_transforms)    <span class="comment"># 输入数据集路径，分别对原始图片和标签进行处理</span></span><br><span class="line">    dataloaders = DataLoader(liver_dataset, batch_size=batch_size, shuffle=<span class="literal">True</span>, num_workers=<span class="number">4</span>)     <span class="comment"># 从dataset中载入数据</span></span><br><span class="line">    train_model(model, criterion, optimizer, dataloaders) <span class="comment">#进行训练</span></span><br></pre></td></tr></table></figure>
+
+<p>这里讲图片缩放的大小为448*448同时batch_size设置为2，这样在P1000这样显卡内存为4G的机器上训练师显存能够得到充分的利用。同时由于batch_size和图片的分辨率都会对训练结构产生影响，且两者的数值都应该保持一个相对较大的值。<br>在显存较大的机器上进行训练师最好将图片的分辨率和batch_size设置为较大的值。</p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span>():</span></span><br><span class="line">    model = Unet(<span class="number">3</span>, <span class="number">1</span>)</span><br><span class="line">    model.load_state_dict(torch.load(args.ckpt,map_location=<span class="string">&#x27;cpu&#x27;</span>))</span><br><span class="line">    liver_dataset = LiverDataset(<span class="string">&quot;D:/Data/yuyifenge/test&quot;</span>, transform=x_transforms,target_transform=y_transforms)</span><br><span class="line">    dataloaders = DataLoader(liver_dataset, batch_size=<span class="number">1</span>)</span><br><span class="line">    model.eval()</span><br><span class="line">    <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">    plt.ion()</span><br><span class="line">    z=<span class="number">0</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> x, _ <span class="keyword">in</span> dataloaders:</span><br><span class="line">            y=model(x)</span><br><span class="line">            img_y=torch.squeeze(y).numpy()</span><br><span class="line">            plt.imshow(img_y)</span><br><span class="line">            img_y = img_y * <span class="number">30</span></span><br><span class="line">            <span class="comment"># print(img_y)</span></span><br><span class="line">            cv2.imwrite(<span class="string">&quot;D:/Data/yuyifenge/test/t/%03d.png&quot;</span>%z,img_y)</span><br><span class="line">            plt.pause(<span class="number">0.01</span>)</span><br><span class="line">            z += <span class="number">1</span></span><br><span class="line">        plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>验证的过程比较简单，即将模型信息导入后直接使用</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/09/25/algorithm/qi-che-lun-gu-lei-xing-de-shi-bie/" rel="prev" title="汽车轮毂类型的识别">
+      <i class="fa fa-chevron-left"></i> 汽车轮毂类型的识别
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/12/02/utils/python-shen-du-xue-xi-huan-jing-pei-zhi/" rel="next" title="Python深度学习环境配置">
+      Python深度学习环境配置 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2"><span class="nav-number">1.1.</span> <span class="nav-text">语义分割</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UNet"><span class="nav-number">1.2.</span> <span class="nav-text">UNet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">代码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E5%A4%84%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">数据集处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UNet%E7%BD%91%E7%BB%9C"><span class="nav-number">2.2.</span> <span class="nav-text">UNet网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83"><span class="nav-number">2.3.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">2.4.</span> <span class="nav-text">验证</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">李寿贤</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李寿贤</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"xb8ocBOeUvnh1ClRKD6b7Vwm-gzGzoHsz","app_key":"ODH211TGDI1jVYfBVxifNiXt","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '9AvQGweVbH47hbtztejqnkta-gzGzoHsz',
+      appKey     : 'lo0cfhvPh5MqPkgzHzT5n0Az',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

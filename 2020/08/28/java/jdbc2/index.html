@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lishx.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="操作Blob类型数据mysql中Blob类型 mysql中Blob是一个二进制的大型对象，是一个可以存储大量数据的容器，他能容纳不同大小的数据 插入blob类型的数据必须使用Preparedstatement，因为BLOB类型的数据无法使用字符串拼接 Mysql中有四种类型的Blob（除了在储存的最大容量上的差别外，他们是等同的）     类型 大小（单位字节）    TinyBlob 最大255">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDBC">
+<meta property="og:url" content="lishx.com/2020/08/28/java/jdbc2/index.html">
+<meta property="og:site_name" content="lishouxian&#39;s BLOG">
+<meta property="og:description" content="操作Blob类型数据mysql中Blob类型 mysql中Blob是一个二进制的大型对象，是一个可以存储大量数据的容器，他能容纳不同大小的数据 插入blob类型的数据必须使用Preparedstatement，因为BLOB类型的数据无法使用字符串拼接 Mysql中有四种类型的Blob（除了在储存的最大容量上的差别外，他们是等同的）     类型 大小（单位字节）    TinyBlob 最大255">
+<meta property="og:locale">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1gi9rdmk2caj30lu0680ur.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1gi6qwygh07j30fj067wf3.jpg">
+<meta property="article:published_time" content="2020-08-28T07:14:00.000Z">
+<meta property="article:modified_time" content="2020-09-05T09:26:42.743Z">
+<meta property="article:author" content="李寿贤">
+<meta property="article:tag" content="javaweb">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1gi9rdmk2caj30lu0680ur.jpg">
+
+<link rel="canonical" href="lishx.com/2020/08/28/java/jdbc2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>JDBC | lishouxian's BLOG</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lishouxian's BLOG</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="lishx.com/2020/08/28/java/jdbc2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="李寿贤">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lishouxian's BLOG">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JDBC
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-28 15:14:00" itemprop="dateCreated datePublished" datetime="2020-08-28T15:14:00+08:00">2020-08-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-05 17:26:42" itemprop="dateModified" datetime="2020-09-05T17:26:42+08:00">2020-09-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javaweb/" itemprop="url" rel="index"><span itemprop="name">javaweb</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/08/28/java/jdbc2/" class="post-meta-item leancloud_visitors" data-flag-title="JDBC" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/08/28/java/jdbc2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/28/java/jdbc2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="操作Blob类型数据"><a href="#操作Blob类型数据" class="headerlink" title="操作Blob类型数据"></a>操作Blob类型数据</h2><h4 id="mysql中Blob类型"><a href="#mysql中Blob类型" class="headerlink" title="mysql中Blob类型"></a>mysql中Blob类型</h4><ul>
+<li>mysql中Blob是一个二进制的大型对象，是一个可以存储大量数据的容器，他能容纳不同大小的数据</li>
+<li>插入blob类型的数据必须使用Preparedstatement，因为BLOB类型的数据无法使用字符串拼接</li>
+<li>Mysql中有四种类型的Blob（除了在储存的最大容量上的差别外，他们是等同的）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>大小（单位字节）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TinyBlob</td>
+<td>最大255字节</td>
+</tr>
+<tr>
+<td>Blob</td>
+<td>最大65K</td>
+</tr>
+<tr>
+<td>MediumBlob</td>
+<td>最大16M</td>
+</tr>
+<tr>
+<td>LongBlob</td>
+<td>最大4G</td>
+</tr>
+</tbody></table>
+<ul>
+<li>在实际开发过程中根据存入护具大小定义不同类型的BLob</li>
+<li>需要注意的是假如储存的数据的容量过大，数据库的性能会下降</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileInputStream is = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">&quot;1.jpg&quot;</span>))</span><br><span class="line"><span class="comment">//以流的方式来传输</span></span><br><span class="line">ps.setObject(<span class="number">3</span>,is);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Blob photo = re.getBlob(<span class="string">&quot;photo&quot;</span>)</span><br><span class="line">InputStream is = photo.getBinaryStream();</span><br><span class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">&quot;li.jpg&quot;</span>)</span><br><span class="line"><span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">int</span> len;</span><br><span class="line"><span class="keyword">while</span>((len = is.read(buffer))!= <span class="number">1</span>)&#123;</span><br><span class="line">    fos.write(buffer,<span class="number">0</span>,len);</span><br><span class="line">&#125;</span><br><span class="line">is.close();</span><br><span class="line">fos.close();</span><br></pre></td></tr></table></figure>
+
+<p>如果在指定了相关的Blob类型以后，还报错：xxx too large，那么在mysql的安装目录下，找my.ini文件加上如下的配置参数： <strong>max_allowed_packet=16M</strong>。同时注意：修改了my.ini文件之后，需要重新启动mysql服务。</p>
+<h2 id="批量操作数据"><a href="#批量操作数据" class="headerlink" title="批量操作数据"></a>批量操作数据</h2><p>当需要批量插入活着更新记录时可以使用Java的批量更新机制，这一机制允许多条语句一次性提交给数据库批量处理。通常情况下会比单独提交更有效率。</p>
+<p>使用prepardStatement如何实现更加高效的批量操作</p>
+<ul>
+<li>addBathch(String) 添加需要批量处理的SQL语句或者参数</li>
+<li>excuteBatch() 执行批量处理语句</li>
+<li>clearBatch() 清空缓存的数据</li>
+</ul>
+<p>通常情况下我们会遇到两种批量执行SQL语句的情况：</p>
+<ul>
+<li>多条SQL语句的批量处理</li>
+<li>一个SQL语句的批量传参</li>
+</ul>
+<p>如何使用preparedStatement批量传参呢</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 使用Connection 的 setAutoCommit(false)  /  commit()</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert2</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">	<span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">		</span><br><span class="line">	Connection conn = JDBCUtils.getConnection();</span><br><span class="line">		</span><br><span class="line">	<span class="comment">//1.设置为不自动提交数据</span></span><br><span class="line">	conn.setAutoCommit(<span class="keyword">false</span>);</span><br><span class="line">		</span><br><span class="line">	String sql = <span class="string">&quot;insert into goods(name)values(?)&quot;</span>;</span><br><span class="line">	PreparedStatement ps = conn.prepareStatement(sql);</span><br><span class="line">		</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= <span class="number">1000000</span>;i++)&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testJDBCTransaction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    	Connection conn = <span class="keyword">null</span>;</span><br><span class="line">    	<span class="keyword">try</span> &#123;</span><br><span class="line">    		<span class="comment">// 1.获取数据库连接</span></span><br><span class="line">    		conn = JDBCUtils.getConnection();</span><br><span class="line">    		<span class="comment">// 2.开启事务</span></span><br><span class="line">    		conn.setAutoCommit(<span class="keyword">false</span>);</span><br><span class="line">    		<span class="comment">// 3.进行数据库操作</span></span><br><span class="line">    		String sql1 = <span class="string">&quot;update user_table set balance = balance - 100 where user = ?&quot;</span>;</span><br><span class="line">    		update(conn, sql1, <span class="string">&quot;AA&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    		<span class="comment">// 模拟网络异常</span></span><br><span class="line">    		<span class="comment">//System.out.println(10 / 0);</span></span><br><span class="line">    </span><br><span class="line">    		String sql2 = <span class="string">&quot;update user_table set balance = balance + 100 where user = ?&quot;</span>;</span><br><span class="line">    		update(conn, sql2, <span class="string">&quot;BB&quot;</span>);</span><br><span class="line">    		<span class="comment">// 4.若没有异常，则提交事务</span></span><br><span class="line">    		conn.commit();</span><br><span class="line">    	&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    		e.printStackTrace();</span><br><span class="line">    		<span class="comment">// 5.若有异常，则回滚事务</span></span><br><span class="line">    		<span class="keyword">try</span> &#123;</span><br><span class="line">    			conn.rollback();</span><br><span class="line">    		&#125; <span class="keyword">catch</span> (SQLException e1) &#123;</span><br><span class="line">    			e1.printStackTrace();</span><br><span class="line">    		&#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">    			<span class="comment">//6.恢复每次DML操作的自动提交功能</span></span><br><span class="line">    			conn.setAutoCommit(<span class="keyword">true</span>);</span><br><span class="line">    		&#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">    			e.printStackTrace();</span><br><span class="line">    		&#125;</span><br><span class="line">            <span class="comment">//7.关闭连接</span></span><br><span class="line">    		JDBCUtils.closeResource(conn, <span class="keyword">null</span>, <span class="keyword">null</span>); </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+
+<p>其中，对数据库操作的方法为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//使用事务以后的通用的增删改操作（version 2.0）</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(Connection conn ,String sql, Object... args)</span> </span>&#123;</span><br><span class="line">	PreparedStatement ps = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		<span class="comment">// 1.获取PreparedStatement的实例 (或：预编译sql语句)</span></span><br><span class="line">		ps = conn.prepareStatement(sql);</span><br><span class="line">		<span class="comment">// 2.填充占位符</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; args.length; i++) &#123;</span><br><span class="line">			ps.setObject(i + <span class="number">1</span>, args[i]);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 3.执行sql语句</span></span><br><span class="line">		ps.execute();</span><br><span class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">		<span class="comment">// 4.关闭资源</span></span><br><span class="line">		JDBCUtils.closeResource(<span class="keyword">null</span>, ps);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>事务的ACID属性</p>
+<ol>
+<li><p><strong>原子性（Atomicity）</strong><br>原子性是指事务是一个不可分割的工作单位，事务中的操作要么都发生，要么都不发生。 </p>
+</li>
+<li><p><strong>一致性（Consistency）</strong><br>事务必须使数据库从一个一致性状态变换到另外一个一致性状态。</p>
+</li>
+<li><p><strong>隔离性（Isolation）</strong><br>事务的隔离性是指一个事务的执行不能被其他事务干扰，即一个事务内部的操作及使用的数据对并发的其他事务是隔离的，并发执行的各个事务之间不能互相干扰。</p>
+</li>
+<li><p><strong>持久性（Durability）</strong><br>持久性是指一个事务一旦被提交，它对数据库中数据的改变就是永久性的，接下来的其他操作和数据库故障不应该对其有任何影响。</p>
+</li>
+</ol>
+<h4 id="数据库的并发问题"><a href="#数据库的并发问题" class="headerlink" title="数据库的并发问题"></a>数据库的并发问题</h4><ul>
+<li><p>对于同时运行的多个事务, 当这些事务访问数据库中相同的数据时, 如果没有采取必要的隔离机制, 就会导致各种并发问题:</p>
+</li>
+<li><p><strong>脏读</strong>: 对于两个事务 T1, T2, T1 读取了已经被 T2 更新但还<strong>没有被提交</strong>的字段。之后, 若 T2 回滚, T1读取的内容就是临时且无效的。</p>
+</li>
+<li><p><strong>不可重复读</strong>: 对于两个事务T1, T2, T1 读取了一个字段, 然后 T2 <strong>更新</strong>了该字段。之后, T1再次读取同一个字段, 值就不同了。</p>
+</li>
+<li><p><strong>幻读</strong>: 对于两个事务T1, T2, T1 从一个表中读取了一个字段, 然后 T2 在该表中<strong>插入</strong>了一些新的行。之后, 如果 T1 再次读取同一个表, 就会多出几行。</p>
+</li>
+<li><p><strong>数据库事务的隔离性</strong>: 数据库系统必须具有隔离并发运行各个事务的能力, 使它们不会相互影响, 避免各种并发问题。</p>
+</li>
+<li><p>一个事务与其他事务隔离的程度称为隔离级别。数据库规定了多种事务隔离级别, 不同隔离级别对应不同的干扰程度, <strong>隔离级别越高, 数据一致性就越好, 但并发性越弱。</strong></p>
+</li>
+</ul>
+<h4 id="四种隔离级别"><a href="#四种隔离级别" class="headerlink" title="四种隔离级别"></a>四种隔离级别</h4><ul>
+<li>数据库提供的4种事务隔离级别：</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gi9rdmk2caj30lu0680ur.jpg" alt="1555586275271"></p>
+<ul>
+<li>Oracle 支持的 2 种事务隔离级别：<strong>READ COMMITED</strong>, SERIALIZABLE。 Oracle 默认的事务隔离级别为: <strong>READ COMMITED</strong> </li>
+</ul>
+<ul>
+<li>Mysql 支持 4 种事务隔离级别。Mysql 默认的事务隔离级别为: <strong>REPEATABLE READ。</strong></li>
+</ul>
+<h4 id="在MySql中设置隔离级别"><a href="#在MySql中设置隔离级别" class="headerlink" title="在MySql中设置隔离级别"></a>在MySql中设置隔离级别</h4><ul>
+<li><p>每启动一个 mysql 程序, 就会获得一个单独的数据库连接. 每个数据库连接都有一个全局变量 @@tx_isolation, 表示当前的事务隔离级别。</p>
+</li>
+<li><p>查看当前的隔离级别: </p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT @@tx_isolation;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置当前 mySQL 连接的隔离级别:  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set  transaction isolation level read committed;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置数据库系统的全局的隔离级别:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set global transaction isolation level read committed;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>补充操作：</p>
+</li>
+<li><p>创建mysql数据库用户：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create user tom identified by &#39;abc123&#39;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>授予权限</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#授予通过网络方式登录的tom用户，对所有库所有表的全部权限，密码设为abc123.</span><br><span class="line">grant all privileges on *.* to tom@&#39;%&#39;  identified by &#39;abc123&#39;; </span><br><span class="line"></span><br><span class="line">#给tom用户使用本地命令行方式，授予atguigudb这个库下的所有表的插删改查的权限。</span><br><span class="line">grant select,insert,delete,update on atguigudb.* to tom@localhost identified by &#39;abc123&#39;; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="数据库连接池"><a href="#数据库连接池" class="headerlink" title="数据库连接池"></a>数据库连接池</h2><h3 id="数据库连接池的必要性"><a href="#数据库连接池的必要性" class="headerlink" title="数据库连接池的必要性"></a>数据库连接池的必要性</h3><ul>
+<li>在开发基于数据库的web项目的时候，传统的模式基本是按照下面的步骤</li>
+<li>在主程序中（如servlet，beans）中创建数据库连接</li>
+<li>进行sql操作</li>
+<li>断开数据库连接</li>
+<li>这种模式开发，存在的问题有</li>
+<li>普通的数据库连接使用的是DriverManager来获取，每次向数据库建立连接的时候都要将Connection对象加载到内存中，在验证用户名和密码(得花费0.05秒或0.1秒)。需要数据库连接时，就像数据库要求一个，执行完成之后就断开连接，这种方式会大量损耗资源和时间。数据库的连接资源没有得到很好的重复利用吗，如果同时有几百人甚至几千人在线，频繁的进行数据库连接操作会占用很多的系统资源，严重的会造成服务器的崩溃。</li>
+<li>对于每一次的连接，用完之后都要断开数据库的连接，假设程序出现异常没有断开数据连接，将会造成系统数据库系统中的内存泄漏，最终将导致重启数据库。</li>
+<li>这种开发不能控制被创建的连接对象数目，系统资源会毫无顾忌的被分配出去，假设连接过多，也会造成系统内存泄漏，最终将导致重启数据库。</li>
+</ul>
+<h3 id="数据库连接池技术是什么"><a href="#数据库连接池技术是什么" class="headerlink" title="数据库连接池技术是什么"></a>数据库连接池技术是什么</h3><ul>
+<li><p>为解决传统开发过程中数据库连接问题，可以使用数据库连接池技术。</p>
+</li>
+<li><p>数据库连接池的基本思想是：为数据库创建一个“缓冲池”。预先在缓冲池中放入一定数目的连接，当需要建立数据库连接时，只需要从》缓冲池中取出一个，使用完毕之后再放回去就好</p>
+</li>
+<li><p>数据库连接池负责分配、管理和释放数据库连接，它允许应用程序重复使用一个现有的数据库连接而不是重新创建一个。</p>
+</li>
+<li><p>数据库连接池在初始化时将创建一定数目的数据连接放置到数据库连接池中，这些数据库连接的数量是有最小的数据库连接数来设定的。无论这些数据库连接是否被使用，连接池都将一直保证至少有这么多的连接数目。连接池的最大数据库连接数目限定了这个连接能占有的最大连接数目，当应用程序向数据库连接池请求的连接大于最大连接数目时，这些请求将被加入到等待队列中.</p>
+</li>
+<li><p><strong>工作原理：</strong></p>
+</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gi6qwygh07j30fj067wf3.jpg" alt="1555593598606"></p>
+<ul>
+<li><strong>数据库连接池技术的优点</strong></li>
+</ul>
+<p><strong>1. 资源重用</strong></p>
+<p>由于数据库连接得以重用，避免了频繁创建，释放连接引起的大量性能开销。在减少系统消耗的基础上，另一方面也增加了系统运行环境的平稳性。</p>
+<p><strong>2. 更快的系统反应速度</strong></p>
+<p>数据库连接池在初始化过程中，往往已经创建了若干数据库连接置于连接池中备用。此时连接的初始化工作均已完成。对于业务请求处理而言，直接利用现有可用连接，避免了数据库连接初始化和释放过程的时间开销，从而减少了系统的响应时间</p>
+<p><strong>3. 新的资源分配手段</strong></p>
+<p>对于多应用共享同一数据库的系统而言，可在应用层通过数据库连接池的配置，实现某一应用最大可用数据库连接数的限制，避免某一应用独占所有的数据库资源</p>
+<p><strong>4. 统一的连接管理，避免数据库连接泄漏</strong></p>
+<p>在较为完善的数据库连接池实现中，可根据预先的占用超时设定，强制回收被占用连接，从而避免了常规数据库连接操作中可能出现的资源泄露</p>
+<h3 id="多种开源的数据哭连接池"><a href="#多种开源的数据哭连接池" class="headerlink" title="多种开源的数据哭连接池"></a>多种开源的数据哭连接池</h3><ul>
+<li>JDBC 的数据库连接池使用 javax.sql.DataSource 来表示，DataSource 只是一个接口，该接口通常由服务器(Weblogic, WebSphere, Tomcat)提供实现，也有一些开源组织提供实现：</li>
+<li><strong>DBCP</strong> 是Apache提供的数据库连接池。tomcat 服务器自带dbcp数据库连接池。<strong>速度相对c3p0较快</strong>，但因自身存在BUG，Hibernate3已不再提供支持。</li>
+<li><strong>C3P0</strong> 是一个开源组织提供的一个数据库连接池，<strong>速度相对较慢，稳定性还可以。</strong>hibernate官方推荐使用</li>
+<li><strong>Proxool</strong> 是sourceforge下的一个开源项目数据库连接池，有监控连接池状态的功能，<strong>稳定性较c3p0差一点</strong></li>
+<li><strong>BoneCP</strong> 是一个开源组织提供的数据库连接池，速度快</li>
+<li><strong>Druid</strong> 是阿里提供的数据库连接池，据说是集DBCP 、C3P0 、Proxool 优点于一身的数据库连接池，但是速度不确定是否有BoneCP快</li>
+<li>DataSource 通常被称为数据源，它包含连接池和连接池管理两个部分，习惯上也经常把 DataSource 称为连接池</li>
+<li><strong>DataSource用来取代DriverManager来获取Connection，获取速度快，同时可以大幅度提高数据库访问速度。</strong></li>
+<li>特别注意：</li>
+<li>数据源和数据库连接不同，数据源无需创建多个，它是产生数据库连接的工厂，因此<strong>整个应用只需要一个数据源即可。</strong></li>
+<li>当数据库访问结束后，程序还是像以前一样关闭数据库连接：conn.close(); 但conn.close()并没有关闭数据库的物理连接，它仅仅把数据库连接释放，归还给了数据库连接池。</li>
+</ul>
+<h4 id="Druid（德鲁伊）数据库连接池"><a href="#Druid（德鲁伊）数据库连接池" class="headerlink" title="Druid（德鲁伊）数据库连接池"></a>Druid（德鲁伊）数据库连接池</h4><p>Druid是阿里巴巴开源平台上一个数据库连接池实现，它结合了C3P0、DBCP、Proxool等DB池的优点，同时加入了日志监控，可以很好的监控DB池连接和SQL的执行情况，可以说是针对监控而生的DB连接池，<strong>可以说是目前最好的连接池之一。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atguigu.druid;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.sql.DataSource;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.druid.pool.DruidDataSourceFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestDruid</span> </span>&#123;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">Properties pro = <span class="keyword">new</span> Properties();		 pro.load(TestDruid.class.getClassLoader().getResourceAsStream(&quot;druid.properties&quot;));</span><br><span class="line">DataSource ds = DruidDataSourceFactory.createDataSource(pro);</span><br><span class="line">Connection conn = ds.getConnection();</span><br><span class="line">System.out.println(conn);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其中，resrouse下的配置文件为：【druid.properties】</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">url=jdbc:mysql:<span class="comment">//localhost:3306/mybatis?rewriteBatchedStatements=true</span></span><br><span class="line">username=root</span><br><span class="line">password=<span class="number">123456</span></span><br><span class="line">driverClassName=com.mysql,cj.jdbc.Driver</span><br><span class="line"></span><br><span class="line">initialSize=<span class="number">10</span></span><br><span class="line">maxActive=<span class="number">20</span></span><br><span class="line">maxWait=<span class="number">1000</span></span><br><span class="line">filters=wall</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>详细配置参数：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>配置</strong></th>
+<th><strong>缺省</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>name</td>
+<td></td>
+<td>配置这个属性的意义在于，如果存在多个数据源，监控的时候可以通过名字来区分开来。   如果没有配置，将会生成一个名字，格式是：”DataSource-” +   System.identityHashCode(this)</td>
+</tr>
+<tr>
+<td>url</td>
+<td></td>
+<td>连接数据库的url，不同数据库不一样。例如：mysql :   jdbc:mysql://10.20.153.104:3306/druid2      oracle :   jdbc:oracle:thin:@10.20.149.85:1521:ocnauto</td>
+</tr>
+<tr>
+<td>username</td>
+<td></td>
+<td>连接数据库的用户名</td>
+</tr>
+<tr>
+<td>password</td>
+<td></td>
+<td>连接数据库的密码。如果你不希望密码直接写在配置文件中，可以使用ConfigFilter。详细看这里：<a target="_blank" rel="noopener" href="https://github.com/alibaba/druid/wiki/%E4%BD%BF%E7%94%A8ConfigFilter">https://github.com/alibaba/druid/wiki/%E4%BD%BF%E7%94%A8ConfigFilter</a></td>
+</tr>
+<tr>
+<td>driverClassName</td>
+<td></td>
+<td>根据url自动识别   这一项可配可不配，如果不配置druid会根据url自动识别dbType，然后选择相应的driverClassName(建议配置下)</td>
+</tr>
+<tr>
+<td>initialSize</td>
+<td>0</td>
+<td>初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时</td>
+</tr>
+<tr>
+<td>maxActive</td>
+<td>8</td>
+<td>最大连接池数量</td>
+</tr>
+<tr>
+<td>maxIdle</td>
+<td>8</td>
+<td>已经不再使用，配置了也没效果</td>
+</tr>
+<tr>
+<td>minIdle</td>
+<td></td>
+<td>最小连接池数量</td>
+</tr>
+<tr>
+<td>maxWait</td>
+<td></td>
+<td>获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁。</td>
+</tr>
+<tr>
+<td>poolPreparedStatements</td>
+<td>false</td>
+<td>是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。</td>
+</tr>
+<tr>
+<td>maxOpenPreparedStatements</td>
+<td>-1</td>
+<td>要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100</td>
+</tr>
+<tr>
+<td>validationQuery</td>
+<td></td>
+<td>用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用。</td>
+</tr>
+<tr>
+<td>testOnBorrow</td>
+<td>true</td>
+<td>申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。</td>
+</tr>
+<tr>
+<td>testOnReturn</td>
+<td>false</td>
+<td>归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能</td>
+</tr>
+<tr>
+<td>testWhileIdle</td>
+<td>false</td>
+<td>建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。</td>
+</tr>
+<tr>
+<td>timeBetweenEvictionRunsMillis</td>
+<td></td>
+<td>有两个含义： 1)Destroy线程会检测连接的间隔时间2)testWhileIdle的判断依据，详细看testWhileIdle属性的说明</td>
+</tr>
+<tr>
+<td>numTestsPerEvictionRun</td>
+<td></td>
+<td>不再使用，一个DruidDataSource只支持一个EvictionRun</td>
+</tr>
+<tr>
+<td>minEvictableIdleTimeMillis</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>connectionInitSqls</td>
+<td></td>
+<td>物理连接初始化的时候执行的sql</td>
+</tr>
+<tr>
+<td>exceptionSorter</td>
+<td></td>
+<td>根据dbType自动识别   当数据库抛出一些不可恢复的异常时，抛弃连接</td>
+</tr>
+<tr>
+<td>filters</td>
+<td></td>
+<td>属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有：   监控统计用的filter:stat日志用的filter:log4j防御sql注入的filter:wall</td>
+</tr>
+<tr>
+<td>proxyFilters</td>
+<td></td>
+<td>类型是List，如果同时配置了filters和proxyFilters，是组合关系，并非替换关系</td>
+</tr>
+</tbody></table>
+<h2 id="Apache-DBUtils实现CRUD操作"><a href="#Apache-DBUtils实现CRUD操作" class="headerlink" title="Apache-DBUtils实现CRUD操作"></a>Apache-DBUtils实现CRUD操作</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>commons-dbutils 是 Apache 组织提供的一个开源 JDBC工具类库，它是对JDBC的简单封装，学习成本极低，并且使用dbutils能极大简化jdbc编码的工作量，同时也不会影响程序的性能。</p>
+<h3 id="主要API的使用"><a href="#主要API的使用" class="headerlink" title="主要API的使用"></a>主要API的使用</h3><h4 id="DbUtils"><a href="#DbUtils" class="headerlink" title="DbUtils"></a>DbUtils</h4><ul>
+<li>DbUtils ：提供如关闭连接、装载JDBC驱动程序等常规工作的工具类，里面的所有方法都是静态的。主要方法如下：</li>
+<li><strong>public static void close(…) throws java.sql.SQLException</strong>：　DbUtils类提供了三个重载的关闭方法。这些方法检查所提供的参数是不是NULL，如果不是的话，它们就关闭Connection、Statement和ResultSet。</li>
+<li>public static void closeQuietly(…): 这一类方法不仅能在Connection、Statement和ResultSet为NULL情况下避免关闭，还能隐藏一些在程序中抛出的SQLEeception。</li>
+<li>public static void commitAndClose(Connection conn)throws SQLException： 用来提交连接的事务，然后关闭连接</li>
+<li>public static void commitAndCloseQuietly(Connection conn)： 用来提交连接，然后关闭连接，并且在关闭连接时不抛出SQL异常。 </li>
+<li>public static void rollback(Connection conn)throws SQLException：允许conn为null，因为方法内部做了判断</li>
+<li>public static void rollbackAndClose(Connection conn)throws SQLException</li>
+<li>rollbackAndCloseQuietly(Connection)</li>
+<li>public static boolean loadDriver(java.lang.String driverClassName)：这一方装载并注册JDBC驱动程序，如果成功就返回true。使用该方法，你不需要捕捉这个异常ClassNotFoundException。</li>
+</ul>
+<h4 id="QueryRunner类"><a href="#QueryRunner类" class="headerlink" title="QueryRunner类"></a>QueryRunner类</h4><ul>
+<li><p><strong>该类简单化了SQL查询，它与ResultSetHandler组合在一起使用可以完成大部分的数据库操作，能够大大减少编码量。</strong></p>
+<ul>
+<li><p>QueryRunner类提供了两个构造器：</p>
+</li>
+<li><p>默认的构造器</p>
+</li>
+<li><p>需要一个 javax.sql.DataSource 来作参数的构造器</p>
+</li>
+<li><p>QueryRunner类的主要方法：</p>
+</li>
+</ul>
+</li>
+<li><p><strong>更新</strong></p>
+<ul>
+<li>public int update(Connection conn, String sql, Object… params) throws SQLException:用来执行一个更新（插入、更新或删除）操作。</li>
+<li>……</li>
+</ul>
+</li>
+<li><p><strong>插入</strong></p>
+<ul>
+<li>public <T> T insert(Connection conn,String sql,ResultSetHandler<T> rsh, Object… params) throws SQLException：只支持INSERT语句，其中 rsh - The handler used to create the result object from the ResultSet of auto-generated keys.  返回值: An object generated by the handler.即自动生成的键值</li>
+<li>….</li>
+</ul>
+</li>
+<li><p><strong>批处理</strong></p>
+<ul>
+<li>public int[] batch(Connection conn,String sql,Object[][] params)throws SQLException： INSERT, UPDATE, or DELETE语句</li>
+<li>public <T> T insertBatch(Connection conn,String sql,ResultSetHandler<T> rsh,Object[][] params)throws SQLException：只支持INSERT语句</li>
+<li>…..</li>
+</ul>
+</li>
+<li><p><strong>查询</strong></p>
+<ul>
+<li>public Object query(Connection conn, String sql, ResultSetHandler rsh,Object… params) throws SQLException：执行一个查询操作，在这个查询中，对象数组中的每个元素值被用来作为查询语句的置换参数。该方法会自行处理 PreparedStatement 和 ResultSet 的创建和关闭。</li>
+<li>…… </li>
+</ul>
+</li>
+</ul>
+<h4 id="ResultSetHandler接口及实现类"><a href="#ResultSetHandler接口及实现类" class="headerlink" title="ResultSetHandler接口及实现类"></a>ResultSetHandler接口及实现类</h4><ul>
+<li><p>该接口用于处理 java.sql.ResultSet，将数据按要求转换为另一种形式。</p>
+</li>
+<li><p>ResultSetHandler 接口提供了一个单独的方法：Object handle (java.sql.ResultSet .rs)。</p>
+</li>
+<li><p>接口的主要实现类：</p>
+</li>
+<li><p>ArrayHandler：把结果集中的第一行数据转成对象数组。</p>
+</li>
+<li><p>ArrayListHandler：把结果集中的每一行数据都转成一个数组，再存放到List中。</p>
+</li>
+<li><p><strong>BeanHandler：</strong>将结果集中的第一行数据封装到一个对应的JavaBean实例中。</p>
+</li>
+<li><p><strong>BeanListHandler：</strong>将结果集中的每一行数据都封装到一个对应的JavaBean实例中，存放到List里。</p>
+</li>
+<li><p>ColumnListHandler：将结果集中某一列的数据存放到List中。</p>
+</li>
+<li><p>KeyedHandler(name)：将结果集中的每一行数据都封装到一个Map里，再把这些map再存到一个map里，其key为指定的key。</p>
+</li>
+<li><p><strong>MapHandler：</strong>将结果集中的第一行数据封装到一个Map里，key是列名，value就是对应的值。</p>
+</li>
+<li><p><strong>MapListHandler：</strong>将结果集中的每一行数据都封装到一个Map里，然后再存放到List</p>
+</li>
+<li><p><strong>ScalarHandler：</strong>查询单个值对象</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/javaweb/" rel="tag"># javaweb</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/23/java/cookie-session/" rel="prev" title="Cookie与Session">
+      <i class="fa fa-chevron-left"></i> Cookie与Session
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/28/java/jdbc1/" rel="next" title="JDBC">
+      JDBC <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9CBlob%E7%B1%BB%E5%9E%8B%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">操作Blob类型数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mysql%E4%B8%ADBlob%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.0.1.</span> <span class="nav-text">mysql中Blob类型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E6%95%B0%E6%8D%AE"><span class="nav-number">2.</span> <span class="nav-text">批量操作数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98"><span class="nav-number">2.0.1.</span> <span class="nav-text">数据库的并发问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E7%A7%8D%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">2.0.2.</span> <span class="nav-text">四种隔离级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8MySql%E4%B8%AD%E8%AE%BE%E7%BD%AE%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">2.0.3.</span> <span class="nav-text">在MySql中设置隔离级别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="nav-number">3.</span> <span class="nav-text">数据库连接池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7"><span class="nav-number">3.1.</span> <span class="nav-text">数据库连接池的必要性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E6%8A%80%E6%9C%AF%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.2.</span> <span class="nav-text">数据库连接池技术是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%A7%8D%E5%BC%80%E6%BA%90%E7%9A%84%E6%95%B0%E6%8D%AE%E5%93%AD%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="nav-number">3.3.</span> <span class="nav-text">多种开源的数据哭连接池</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Druid%EF%BC%88%E5%BE%B7%E9%B2%81%E4%BC%8A%EF%BC%89%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="nav-number">3.3.1.</span> <span class="nav-text">Druid（德鲁伊）数据库连接池</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-DBUtils%E5%AE%9E%E7%8E%B0CRUD%E6%93%8D%E4%BD%9C"><span class="nav-number">4.</span> <span class="nav-text">Apache-DBUtils实现CRUD操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">4.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81API%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">4.2.</span> <span class="nav-text">主要API的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DbUtils"><span class="nav-number">4.2.1.</span> <span class="nav-text">DbUtils</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#QueryRunner%E7%B1%BB"><span class="nav-number">4.2.2.</span> <span class="nav-text">QueryRunner类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ResultSetHandler%E6%8E%A5%E5%8F%A3%E5%8F%8A%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-number">4.2.3.</span> <span class="nav-text">ResultSetHandler接口及实现类</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">李寿贤</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李寿贤</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"xb8ocBOeUvnh1ClRKD6b7Vwm-gzGzoHsz","app_key":"ODH211TGDI1jVYfBVxifNiXt","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '9AvQGweVbH47hbtztejqnkta-gzGzoHsz',
+      appKey     : 'lo0cfhvPh5MqPkgzHzT5n0Az',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

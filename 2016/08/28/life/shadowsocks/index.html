@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lishx.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="翻墙的原因-中国大陆的防火长城以下摘自维基百科  “防火长城（英语：Great Firewall of China，常用简称：GFW，中文也称中国国家防火墙，中国大陆民众俗称防火墙等），是对中国政府在其互联网边界审查系统（包括相关行政审查系统）的统称。此系统起步于1998年，其英文名称得自于2002年5月17日Charles R. Smith所写的一篇关于中国网络审查的文章《The Great F">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于GFW">
+<meta property="og:url" content="lishx.com/2016/08/28/life/shadowsocks/index.html">
+<meta property="og:site_name" content="lishouxian&#39;s BLOG">
+<meta property="og:description" content="翻墙的原因-中国大陆的防火长城以下摘自维基百科  “防火长城（英语：Great Firewall of China，常用简称：GFW，中文也称中国国家防火墙，中国大陆民众俗称防火墙等），是对中国政府在其互联网边界审查系统（包括相关行政审查系统）的统称。此系统起步于1998年，其英文名称得自于2002年5月17日Charles R. Smith所写的一篇关于中国网络审查的文章《The Great F">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-08-28T14:55:49.000Z">
+<meta property="article:modified_time" content="2020-09-01T03:07:45.724Z">
+<meta property="article:author" content="李寿贤">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="lishx.com/2016/08/28/life/shadowsocks/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>关于GFW | lishouxian's BLOG</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lishouxian's BLOG</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="lishx.com/2016/08/28/life/shadowsocks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="李寿贤">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lishouxian's BLOG">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关于GFW
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-08-28 22:55:49" itemprop="dateCreated datePublished" datetime="2016-08-28T22:55:49+08:00">2016-08-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-01 11:07:45" itemprop="dateModified" datetime="2020-09-01T11:07:45+08:00">2020-09-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/life/" itemprop="url" rel="index"><span itemprop="name">life</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/08/28/life/shadowsocks/" class="post-meta-item leancloud_visitors" data-flag-title="关于GFW" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2016/08/28/life/shadowsocks/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2016/08/28/life/shadowsocks/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="翻墙的原因-中国大陆的防火长城"><a href="#翻墙的原因-中国大陆的防火长城" class="headerlink" title="翻墙的原因-中国大陆的防火长城"></a>翻墙的原因-<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%98%B2%E7%81%AB%E9%95%BF%E5%9F%8E">中国大陆的防火长城</a></h1><p>以下摘自维基百科</p>
+<blockquote>
+<p>“防火长城（英语：Great Firewall of China，常用简称：GFW，中文也称中国国家防火墙，中国大陆民众俗称防火墙等），是对中国政府在其互联网边界审查系统（包括相关行政审查系统）的统称。此系统起步于1998年，其英文名称得自于2002年5月17日Charles R. Smith所写的一篇关于中国网络审查的文章《The Great Firewall of China》，取与Great Wall（长城）相谐的效果，简写为Great Firewall，缩写GFW。随着使用的拓广，中文“墙”和英文“GFW”有时也被用作动词，网友所说的“被墙”即指被防火长城所屏蔽。”</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="hosts"><a href="#hosts" class="headerlink" title="hosts"></a>hosts</h1><h2 id="网址与IP"><a href="#网址与IP" class="headerlink" title="网址与IP"></a>网址与IP</h2><p>我们知道，每一个网站都有一个网址（专业术语叫：域名），而且这个网址是独立且唯一的。而每一个网址呢，都对应着一个IP地址，或者说是一个存储的空间。当我们访问一个网站时，其实就是读取这个存储空间上的“资料”，也就是访问这个IP地址，但是，电脑是如何在你输入网址后就找个找个IP地址的呢？</p>
+<h2 id="DNS服务器"><a href="#DNS服务器" class="headerlink" title="DNS服务器"></a>DNS服务器</h2><p>其实，我们输入网址以后，并不是直接通过网址去连你的网站，而是通过另外一个工具，将网址“还原”成IP地址，再通过IP地址，去连接你要-访问的网站，读取资料。这个工具呢，就叫做DNS服务器（domain name server）。可以理解成几十年前的那种电话，需要接线员中转，才能顺利的找到你要的目标，而这个过程就叫域名解析或者DNS解析。需要注意的是，它不是在电脑本地完成的，也是一个在云端的处理器。</p>
+<h2 id="为什么有的网站上不了？"><a href="#为什么有的网站上不了？" class="headerlink" title="为什么有的网站上不了？"></a>为什么有的网站上不了？</h2><p>对应方式一旦改变了，或者被某种方式切断了，我们就无法通过访问网址得到真实的IP从而访问网站。这是某些网站上不了的原因之一，专业术语叫做DNS劫持和DNS污染（两者不是一回事）。这个时候，我们就要人为地去建立这种对应关系。</p>
+<h2 id="hosts文件的作用"><a href="#hosts文件的作用" class="headerlink" title="hosts文件的作用"></a>hosts文件的作用</h2><p>那怎样建立这种对应关系呢？这就要用到我们要讲的hosts文件了。hosts文件是系统自带的一个小文件，它的作用通俗地说，就是一个记录对应关系的小本子。当你要上某个网站，如facebook的时候，系统会先查hosts文件，如果里面有facebook对应的IP地址，它则会主动去连这个IP，而不需要DNS解析来处理了。这个时候，不管是DNS劫持和DNS污染，对你上网都是没有影响的。所以，我们只要能在hosts里面，建立起这种正确的对应关系，就可以避开DNS引起的问题。意思就是 ，访问网站找IP地址时，host比起dns解析具有优先级!<br>所以我们在网上找到对应的hosts文件来替代电脑里的hosts文件就可以实现翻墙了。</p>
+<blockquote>
+<p>“网络审查在各个国家都普遍存在着，它并不仅存在于中国。在全球的局势对中国都不利的当下，当局会过滤掉影响、危害到中国长远发展的信息，此时国家安全的意义更加重大。<br>互联网上存在着大量终究不现实的、不客观的，甚至自相矛盾的抹黑当局政府言论，它们背后一般有西方政府或非政府组织资金支持。这些媒体包括但不限于一些港媒、境外网站。<br>我们希望您能在遇到此类言论和见解时，不要不加思考地、情绪一度被煽动而不能克制地、盲目地相信这些片面或者歪曲事实的东西，而是要事实求是地思考，要摆脱情绪绑架的怪诞思维去理解。<br>我们需要了解到，中国的发展总基调是“稳中求进”，中国社会的最核心问题就是稳定。失去稳定的中国将会是一盘散沙，面临分裂和肢解的危险。我们希望您了解当今中国发展的根本保证是什么，发展的过程中哪部分是主旋律，哪些是噪音；哪些是进取的，哪些是会开历史倒车的。<br>我们应该清醒和全面地认识问题，偏信西方媒体的言论、缺乏对国家的信任是不可取的。您的数据安全和隐私对您尤为重要。若这些信息不应当被西方掌握时，它对国家和民族的命运更为重要。出于此原因，当局可能会限制您的行为，我们不会也无法干预当局的任何政策和决定。<br>所以，我们希望您在使用此服务时，不要盲目地攻击当局的做法。”</p>
+</blockquote>
+<p>是的，访问这个网址你会找到hosts,分为ipv4,ipv6。根据自己的需要选择。</p>
+<h1 id="vpn"><a href="#vpn" class="headerlink" title="vpn"></a>vpn</h1><p>用各种免费或者付费的vpn翻墙。（此略讲）</p>
+<h1 id="shadowsocks"><a href="#shadowsocks" class="headerlink" title="shadowsocks"></a><a target="_blank" rel="noopener" href="http://7xpqqp.com1.z0.glb.clouddn.com/lishx.comyzhx_ss_258_30.zip">shadowsocks</a></h1><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Shadowsocks"><strong>来自维基百科</strong></a></p>
+<blockquote>
+<p>“Shadowsocks（中文名称：影梭）是使用Python等语言开发的、基于Apache许可证开源的代理软件。Shadowsocks使用socks5代理，用于保护网络流量。在中国大陆被广泛用于突破防火长城（GFW），以浏览被封锁的内容。<br>Shadowsocks分为服务器端和客户端。<strong>在使用之前，需要先将服务器端部署在支持Python的服务器上面，然后通过客户端连接并创建本地代理。</strong><br>2015年8月22日，Shadowsocks原作者Clowwindy因受到中国政府的压力，停止维护此项目。但开发已有人接管，仍有更新陆续推送<br><strong>最新消息目前已有人接替Clowwindy的开发工作，而且还是个妹子！！！</strong>“</p>
+</blockquote>
+<h2 id="windows端"><a href="#windows端" class="headerlink" title="windows端"></a>windows端</h2><p>配置方法：下载客户端，然后让会弄的人给你配置文件，haha，我当然不会只是这样讲解：建议使用最简单易行的<strong>扫描屏幕上的二维码</strong>，该选项在小飞机<strong>右键</strong>、<strong>服务器</strong>、<strong>扫描屏幕上的二维码</strong>。<br>pac模式：只有被墙的网站会进行代理，从而翻墙。<br>全局模式：顾名思义，对所有的网站进行代理，此举会导致国内的网站访问变慢。<br>允许来自局域网的连接：电脑打开热点后，手机连上热点并在如图所示的192.168.1.228位置改为电脑的ip。（电脑ip获取方式在windows开始键上右键选择命令提示符输入<strong>ipconfig</strong>，回车。)</p>
+<h2 id="iphone-ipad"><a href="#iphone-ipad" class="headerlink" title="iphone/ipad"></a>iphone/ipad</h2><p>下载shadowsrocket（6元），或者surge（美区APP，贵死人）<br>surge请自行配置，具体参考该网址<a target="_blank" rel="noopener" href="https://blog.netsh.org/posts/ios-surge-shadowsocks_2221.netsh.html"><strong>iOS 上使用 Surge 配合 Shadowsocks 免越狱翻墙教程</strong></a><br>shadowsrocket：请先将ios更新到9.0及以上，在APPstore中将shadowsrocket更新到最新版本，点击<strong>扫一扫</strong>扫描配置的二维码即可。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/06/14/life/artificial-intelligence/" rel="prev" title="报告会有感">
+      <i class="fa fa-chevron-left"></i> 报告会有感
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/03/30/life/zen-yang-xi-huan-ni-de-dian-nao/" rel="next" title="怎样喜欢你的电脑">
+      怎样喜欢你的电脑 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BF%BB%E5%A2%99%E7%9A%84%E5%8E%9F%E5%9B%A0-%E4%B8%AD%E5%9B%BD%E5%A4%A7%E9%99%86%E7%9A%84%E9%98%B2%E7%81%AB%E9%95%BF%E5%9F%8E"><span class="nav-number">1.</span> <span class="nav-text">翻墙的原因-中国大陆的防火长城</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hosts"><span class="nav-number">2.</span> <span class="nav-text">hosts</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E5%9D%80%E4%B8%8EIP"><span class="nav-number">2.1.</span> <span class="nav-text">网址与IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">2.2.</span> <span class="nav-text">DNS服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E7%9A%84%E7%BD%91%E7%AB%99%E4%B8%8A%E4%B8%8D%E4%BA%86%EF%BC%9F"><span class="nav-number">2.3.</span> <span class="nav-text">为什么有的网站上不了？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hosts%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">2.4.</span> <span class="nav-text">hosts文件的作用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vpn"><span class="nav-number">3.</span> <span class="nav-text">vpn</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shadowsocks"><span class="nav-number">4.</span> <span class="nav-text">shadowsocks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#windows%E7%AB%AF"><span class="nav-number">4.1.</span> <span class="nav-text">windows端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iphone-ipad"><span class="nav-number">4.2.</span> <span class="nav-text">iphone&#x2F;ipad</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">李寿贤</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李寿贤</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"xb8ocBOeUvnh1ClRKD6b7Vwm-gzGzoHsz","app_key":"ODH211TGDI1jVYfBVxifNiXt","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '9AvQGweVbH47hbtztejqnkta-gzGzoHsz',
+      appKey     : 'lo0cfhvPh5MqPkgzHzT5n0Az',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

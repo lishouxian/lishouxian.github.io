@@ -22,22 +22,22 @@
 
   <meta name="description" content="操作Blob类型数据mysql中Blob类型 mysql中Blob是一个二进制的大型对象，是一个可以存储大量数据的容器，他能容纳不同大小的数据 插入blob类型的数据必须使用Preparedstatement，因为BLOB类型的数据无法使用字符串拼接 Mysql中有四种类型的Blob（除了在储存的最大容量上的差别外，他们是等同的）     类型 大小（单位字节）    TinyBlob 最大255">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JDBC">
-<meta property="og:url" content="lishx.com/2020/08/28/java/jdbc2/index.html">
+<meta property="og:title" content="JDBC(二)">
+<meta property="og:url" content="lishx.com/2020/08/29/java/jdbc2/index.html">
 <meta property="og:site_name" content="lishouxian&#39;s BLOG">
 <meta property="og:description" content="操作Blob类型数据mysql中Blob类型 mysql中Blob是一个二进制的大型对象，是一个可以存储大量数据的容器，他能容纳不同大小的数据 插入blob类型的数据必须使用Preparedstatement，因为BLOB类型的数据无法使用字符串拼接 Mysql中有四种类型的Blob（除了在储存的最大容量上的差别外，他们是等同的）     类型 大小（单位字节）    TinyBlob 最大255">
 <meta property="og:locale">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1gi9rdmk2caj30lu0680ur.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1gi6qwygh07j30fj067wf3.jpg">
-<meta property="article:published_time" content="2020-08-28T07:14:00.000Z">
-<meta property="article:modified_time" content="2020-09-05T09:26:42.743Z">
+<meta property="article:published_time" content="2020-08-29T07:14:00.000Z">
+<meta property="article:modified_time" content="2020-09-08T13:22:52.338Z">
 <meta property="article:author" content="李寿贤">
 <meta property="article:tag" content="javaweb">
 <meta property="article:tag" content="数据库">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1gi9rdmk2caj30lu0680ur.jpg">
 
-<link rel="canonical" href="lishx.com/2020/08/28/java/jdbc2/">
+<link rel="canonical" href="lishx.com/2020/08/29/java/jdbc2/">
 
 
 <script id="page-configurations">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>JDBC | lishouxian's BLOG</title>
+  <title>JDBC(二) | lishouxian's BLOG</title>
   
 
 
@@ -165,7 +165,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="lishx.com/2020/08/28/java/jdbc2/">
+    <link itemprop="mainEntityOfPage" href="lishx.com/2020/08/29/java/jdbc2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -178,7 +178,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          JDBC
+          JDBC(二)
         </h1>
 
         <div class="post-meta">
@@ -188,14 +188,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-08-28 15:14:00" itemprop="dateCreated datePublished" datetime="2020-08-28T15:14:00+08:00">2020-08-28</time>
+              <time title="Created: 2020-08-29 15:14:00" itemprop="dateCreated datePublished" datetime="2020-08-29T15:14:00+08:00">2020-08-29</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-05 17:26:42" itemprop="dateModified" datetime="2020-09-05T17:26:42+08:00">2020-09-05</time>
+                <time title="Modified: 2020-09-08 21:22:52" itemprop="dateModified" datetime="2020-09-08T21:22:52+08:00">2020-09-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -208,7 +208,7 @@
             </span>
 
           
-            <span id="/2020/08/28/java/jdbc2/" class="post-meta-item leancloud_visitors" data-flag-title="JDBC" title="Views">
+            <span id="/2020/08/29/java/jdbc2/" class="post-meta-item leancloud_visitors" data-flag-title="JDBC(二)" title="Views">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -223,8 +223,8 @@
       </span>
       <span class="post-meta-item-text">Valine: </span>
     
-    <a title="valine" href="/2020/08/28/java/jdbc2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/28/java/jdbc2/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/08/29/java/jdbc2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/29/java/jdbc2/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -272,6 +272,8 @@
 <li>在实际开发过程中根据存入护具大小定义不同类型的BLob</li>
 <li>需要注意的是假如储存的数据的容量过大，数据库的性能会下降</li>
 </ul>
+<a id="more"></a>
+
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileInputStream is = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">&quot;1.jpg&quot;</span>))</span><br><span class="line"><span class="comment">//以流的方式来传输</span></span><br><span class="line">ps.setObject(<span class="number">3</span>,is);</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Blob photo = re.getBlob(<span class="string">&quot;photo&quot;</span>)</span><br><span class="line">InputStream is = photo.getBinaryStream();</span><br><span class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">&quot;li.jpg&quot;</span>)</span><br><span class="line"><span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">int</span> len;</span><br><span class="line"><span class="keyword">while</span>((len = is.read(buffer))!= <span class="number">1</span>)&#123;</span><br><span class="line">    fos.write(buffer,<span class="number">0</span>,len);</span><br><span class="line">&#125;</span><br><span class="line">is.close();</span><br><span class="line">fos.close();</span><br></pre></td></tr></table></figure>
@@ -639,12 +641,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/08/23/java/cookie-session/" rel="prev" title="Cookie与Session">
-      <i class="fa fa-chevron-left"></i> Cookie与Session
+    <a href="/2020/08/28/java/jdbc1/" rel="prev" title="JDBC(一)">
+      <i class="fa fa-chevron-left"></i> JDBC(一)
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/08/28/java/jdbc1/" rel="next" title="JDBC">
-      JDBC <i class="fa fa-chevron-right"></i>
+    <a href="/2020/08/31/algorithm/method/" rel="next" title="常用的几种算法">
+      常用的几种算法 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -719,7 +721,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -732,7 +734,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

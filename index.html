@@ -180,7 +180,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-09-15 10:00:00 / Modified: 10:13:11" itemprop="dateCreated datePublished" datetime="2020-09-15T10:00:00+08:00">2020-09-15</time>
+              <time title="Created: 2020-09-15 10:00:00 / Modified: 10:14:56" itemprop="dateCreated datePublished" datetime="2020-09-15T10:00:00+08:00">2020-09-15</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -252,75 +252,14 @@
 <td>Writer</td>
 </tr>
 </tbody></table>
-<p>TODO <code>NIO</code></p>
-<h2 id="字符流读写文件"><a href="#字符流读写文件" class="headerlink" title="字符流读写文件"></a>字符流读写文件</h2><p>读取文件</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    File file = <span class="keyword">new</span> File(<span class="string">&quot;IO/src/main/resources/1.txt&quot;</span>);</span><br><span class="line">    System.out.println(file.getAbsolutePath());</span><br><span class="line">    FileReader fileReader = <span class="keyword">new</span> FileReader(file);</span><br><span class="line">    <span class="keyword">int</span> read = fileReader.read(); <span class="comment">//返回读入的字符,如果达到文件末尾则返回-1</span></span><br><span class="line">    <span class="keyword">while</span>(read != -<span class="number">1</span>)&#123;</span><br><span class="line">        System.out.println((<span class="keyword">char</span>) read);</span><br><span class="line">        read = fileReader.read();</span><br><span class="line">    &#125;</span><br><span class="line">    fileReader.close();</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-
-<p>写出文件</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fileWriteTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">    File file = <span class="keyword">new</span> File(<span class="string">&quot;src/main/resources/1.txt&quot;</span>);</span><br><span class="line">    FileWriter fileWriter = <span class="keyword">new</span> FileWriter(file,<span class="keyword">true</span>); <span class="comment">//是否追加</span></span><br><span class="line">    fileWriter.write(<span class="string">&quot;你好\n&quot;</span>);  <span class="comment">//覆盖</span></span><br><span class="line">    fileWriter.close(); <span class="comment">// 流的关闭</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>读写文件(文本文件)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fileCopyTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">    File file1 = <span class="keyword">new</span> File(<span class="string">&quot;src/main/resources/1.txt&quot;</span>);</span><br><span class="line">    File file2 = <span class="keyword">new</span> File(<span class="string">&quot;src/main/resources/2.txt&quot;</span>);</span><br><span class="line">    FileReader fileReader = <span class="keyword">new</span> FileReader(file1);</span><br><span class="line">    FileWriter fileWriter1 = <span class="keyword">new</span> FileWriter(file2);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span>[] chars = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">int</span> len;</span><br><span class="line">    <span class="keyword">while</span>((len = fileReader.read(chars)) != -<span class="number">1</span>)&#123;</span><br><span class="line">        fileWriter1.write(chars,<span class="number">0</span>,len);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fileReader.close();</span><br><span class="line">    fileWriter1.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="字节流读写文件"><a href="#字节流读写文件" class="headerlink" title="字节流读写文件"></a>字节流读写文件</h2><p>读写非文本文件</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">jpgCopyTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">    File file1 = <span class="keyword">new</span> File(<span class="string">&quot;src/main/resources/1.jpg&quot;</span>);</span><br><span class="line">    File file2 = <span class="keyword">new</span> File(<span class="string">&quot;src/main/resources/2.jpg&quot;</span>);</span><br><span class="line">    FileInputStream fileInputStream = <span class="keyword">new</span> FileInputStream(file1);</span><br><span class="line">    FileOutputStream fileOutputStream = <span class="keyword">new</span> FileOutputStream(file2);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">byte</span>[] chars = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">int</span> len;</span><br><span class="line">    <span class="keyword">while</span>((len = fileInputStream.read(chars)) != -<span class="number">1</span>)&#123;</span><br><span class="line">        fileOutputStream.write(chars,<span class="number">0</span>,len);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fileInputStream.close();</span><br><span class="line">    fileOutputStream.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="使用缓冲流读写文件"><a href="#使用缓冲流读写文件" class="headerlink" title="使用缓冲流读写文件"></a>使用缓冲流读写文件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bufferTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">    File file1 = <span class="keyword">new</span> File(<span class="string">&quot;src/main/resources/1.jpg&quot;</span>);</span><br><span class="line">    File file2 = <span class="keyword">new</span> File(<span class="string">&quot;src/main/resources/2.jpg&quot;</span>);</span><br><span class="line">    FileInputStream fileInputStream = <span class="keyword">new</span> FileInputStream(file1);</span><br><span class="line">    FileOutputStream fileOutputStream = <span class="keyword">new</span> FileOutputStream(file2);</span><br><span class="line"></span><br><span class="line">    BufferedInputStream bufferedInputStream = <span class="keyword">new</span> BufferedInputStream(fileInputStream);</span><br><span class="line">    BufferedOutputStream bufferedOutputStream = <span class="keyword">new</span> BufferedOutputStream(fileOutputStream);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">byte</span>[] chars = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>];</span><br><span class="line">    <span class="keyword">int</span> len;</span><br><span class="line">    <span class="keyword">while</span>((len = bufferedInputStream.read(chars)) != -<span class="number">1</span>)&#123;</span><br><span class="line">        bufferedOutputStream.write(chars,<span class="number">0</span>,len);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    bufferedInputStream.close();</span><br><span class="line">    bufferedOutputStream.close();</span><br><span class="line">    fileInputStream.close();</span><br><span class="line">    fileOutputStream.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>提高读写速度的原因，内部提供了一个缓冲区</p>
-<p>处理流就是套接在已有的流的基础之上的流</p>
-<h2 id="转换流"><a href="#转换流" class="headerlink" title="转换流"></a>转换流</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FileInputStream fileInputStream = <span class="keyword">new</span> FileInputStream(file1);</span><br><span class="line">FileOutputStream fileOutputStream = <span class="keyword">new</span> FileOutputStream(file2);</span><br><span class="line"></span><br><span class="line">InputStreamReader inputStreamReader = <span class="keyword">new</span> InputStreamReader(fileInputStream, <span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">OutputStreamWriter outputStreamWriter = <span class="keyword">new</span> OutputStreamWriter(fileOutputStream);</span><br></pre></td></tr></table></figure>
-
-<p>将字节流转换为字符流</p>
-<h2 id="其他流"><a href="#其他流" class="headerlink" title="其他流"></a>其他流</h2><h3 id="标准输入输出流"><a href="#标准输入输出流" class="headerlink" title="标准输入输出流"></a>标准输入输出流</h3><p><code>system.in</code>标准输入流，从控制台的键盘输入，类型是<code>InputStream</code></p>
-<p><code>System.out</code>标准输出流，输出到控制台，类型是<code>PrintStream</code></p>
-<h3 id="打印流"><a href="#打印流" class="headerlink" title="打印流"></a>打印流</h3><p><code>printStream</code>打印字符</p>
-<p><code>printWriter</code>打印字节</p>
-<p>实现将基本数据类型转化为字符输出提供了一系列的<code>print()</code></p>
-<h3 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h3><p><code>DataInputStream</code></p>
-<p><code>DataOutputStream</code></p>
-<p>数据输入输出流</p>
-<h2 id="NIO和IO-转载"><a href="#NIO和IO-转载" class="headerlink" title="NIO和IO(转载)"></a>NIO和IO(转载)</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>NIO即New IO，也可以理解为<code>Non-blocking</code>。这个库是在JDK1.4中才引入的。NIO和IO有相同的作用和目的，但实现方式不同，NIO主要用到的是块，所以NIO的效率要比IO高很多。在Java API中提供了两套NIO，一套是针对标准输入输出NIO，另一套就是网络编程NIO。</p>
-<h3 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h3><table>
-<thead>
-<tr>
-<th><strong>IO</strong></th>
-<th><strong>NIO</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>面向流</td>
-<td>面向缓冲</td>
-</tr>
-<tr>
-<td>阻塞IO</td>
-<td>非阻塞IO</td>
-</tr>
-<tr>
-<td>无</td>
-<td>选择器</td>
-</tr>
-</tbody></table>
-<ul>
-<li><p>面向流与面向缓冲</p>
-<p> Java IO和NIO之间第一个最大的区别是，IO是面向流的，NIO是面向缓冲区的。 Java IO面向流意味着每次从流中读一个或多个字节，直至读取所有字节，它们没有被缓存在任何地方。此外，它不能前后移动流中的数据。如果需要前后移动从流中读取的数据，需要先将它缓存到一个缓冲区。 Java NIO的缓冲导向方法略有不同。数据读取到一个它稍后处理的缓冲区，需要时可在缓冲区中前后移动。这就增加了处理过程中的灵活性。但是，还需要检查是否该缓冲区中包含所有您需要处理的数据。而且，需确保当更多的数据读入缓冲区时，不要覆盖缓冲区里尚未处理的数据。</p>
-</li>
-<li><p>阻塞与非阻塞IO</p>
-<p> Java IO的各种流是阻塞的。这意味着，当一个线程调用read() 或 write()时，该线程被阻塞，直到有一些数据被读取，或数据完全写入。该线程在此期间不能再干任何事情了。Java NIO的非阻塞模式，使一个线程从某通道发送请求读取数据，但是它仅能得到目前可用的数据，如果目前没有数据可用时，就什么都不会获取，而不是保持线程阻塞，所以直至数据变的可以读取之前，该线程可以继续做其他的事情。 非阻塞写也是如此。一个线程请求写入一些数据到某通道，但不需要等待它完全写入，这个线程同时可以去做别的事情。 线程通常将非阻塞IO的空闲时间用于在其它通道上执行IO操作，所以一个单独的线程现在可以管理多个输入和输出通道（channel）。</p>
-</li>
-<li><p>选择器(Selectors)</p>
-<p> Java NIO的选择器允许一个单独的线程来监视多个输入通道，你可以注册多个通道使用一个选择器，然后使用一个单独的线程来“选择”通道：这些通道里已经有可以处理的输入，或者选择已准备写入的通道。这种选择机制，使得一个单独的线程很容易来管理多个通道。</p>
-</li>
-</ul>
-<h3 id="具体内容"><a href="#具体内容" class="headerlink" title="具体内容"></a>具体内容</h3><p>NIO可让您只使用一个（或几个）单线程管理多个通道（网络连接或文件），但付出的代价是解析数据可能会比从一个阻塞流中读取数据更复杂。</p>
-<p>如果需要管理同时打开的成千上万个连接，这些连接每次只是发送少量的数据，例如聊天服务器，实现NIO的服务器可能是一个优势。同样，如果你需要维持许多打开的连接到其他计算机上，如P2P网络中，使用一个单独的线程来管理你所有出站连接，可能是一个优势。一个线程多个连接的设计方案如下图所示：</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gir3mz4kayj3085070weg.jpg" alt="img"></p>
-<p><strong>Java NIO: 单线程管理多个连接</strong></p>
-<p>如果你有少量的连接使用非常高的带宽，一次发送大量的数据，也许典型的IO服务器实现可能非常契合。下图说明了一个典型的IO服务器设计：</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gir3myltu2j30dw07n0sx.jpg" alt="img"></p>
-<p><strong>Java IO: 一个典型的IO服务器设计- 一个连接通过一个线程处理.</strong></p>
-<p>来源 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaoxi/p/6576588.html">https://www.cnblogs.com/xiaoxi/p/6576588.html</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/15/java/IO/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

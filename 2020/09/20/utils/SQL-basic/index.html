@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lishx.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="SQL概述SQL，一般发音为sequel，SQL的全称Structured Query Language)，SQL用来和数据库打交道，完成和数据库的通信，SQL是一套标准。但是每一个数据库都有自己的特性别的数据库没有,当使用这个数据库特性相关的功能,这时SQL语句可能就不是标准了.(90%以上的SQL都是通用的) 什么是数据库数据库，通常是一个或一组文件，保存了一些符合特定规格的数据,数据库对应的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql基础(1)-查询语言">
+<meta property="og:url" content="lishx.com/2020/09/20/utils/SQL-basic/index.html">
+<meta property="og:site_name" content="lishouxian&#39;s BLOG">
+<meta property="og:description" content="SQL概述SQL，一般发音为sequel，SQL的全称Structured Query Language)，SQL用来和数据库打交道，完成和数据库的通信，SQL是一套标准。但是每一个数据库都有自己的特性别的数据库没有,当使用这个数据库特性相关的功能,这时SQL语句可能就不是标准了.(90%以上的SQL都是通用的) 什么是数据库数据库，通常是一个或一组文件，保存了一些符合特定规格的数据,数据库对应的">
+<meta property="og:locale">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1giwb1e5o3vj30ci0fg75a.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1giwb3fajalj30fq0bot9l.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1giwb53m9y3j317c0qwq81.jpg">
+<meta property="article:published_time" content="2020-09-20T13:13:45.000Z">
+<meta property="article:modified_time" content="2020-09-20T07:19:03.316Z">
+<meta property="article:author" content="李寿贤">
+<meta property="article:tag" content="学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007S8ZIlly1giwb1e5o3vj30ci0fg75a.jpg">
+
+<link rel="canonical" href="lishx.com/2020/09/20/utils/SQL-basic/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>sql基础(1)-查询语言 | lishouxian's BLOG</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lishouxian's BLOG</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="lishx.com/2020/09/20/utils/SQL-basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="李寿贤">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lishouxian's BLOG">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sql基础(1)-查询语言
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-09-20 21:13:45 / Modified: 15:19:03" itemprop="dateCreated datePublished" datetime="2020-09-20T21:13:45+08:00">2020-09-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/utils/" itemprop="url" rel="index"><span itemprop="name">utils</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/09/20/utils/SQL-basic/" class="post-meta-item leancloud_visitors" data-flag-title="sql基础(1)-查询语言" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/09/20/utils/SQL-basic/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/20/utils/SQL-basic/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="SQL概述"><a href="#SQL概述" class="headerlink" title="SQL概述"></a>SQL概述</h3><p>SQL，一般发音为sequel，SQL的全称Structured Query Language)，SQL用来和数据库打交道，完成和数据库的通信，SQL是一套标准。但是每一个数据库都有自己的特性别的数据库没有,当使用这个数据库特性相关的功能,这时SQL语句可能就不是标准了.(90%以上的SQL都是通用的)</p>
+<h3 id="什么是数据库"><a href="#什么是数据库" class="headerlink" title="什么是数据库"></a>什么是数据库</h3><p>数据库，通常是一个或一组文件，保存了一些符合特定规格的数据,数据库对应的英语单词是DataBase,简称:DB,数据库软件称为数据库管理系统（DBMS），全称为DataBase Management System，如：Oracle、SQL Server、MySql、Sybase、informix、DB2、interbase、PostgreSql 。</p>
+<h3 id="MySql概述"><a href="#MySql概述" class="headerlink" title="MySql概述"></a>MySql概述</h3><p>MySQL最初是由“MySQL AB”公司开发的一套关系型数据库管理系统（RDBMS-Relational Database Mangerment System）。</p>
+<p>MySQL不仅是最流行的开源数据库，而且是业界成长最快的数据库，每天有超过7万次的下载量，其应用范围从大型企业到专有的嵌入应用系统。</p>
+<p>MySQL AB是由两个瑞典人和一个芬兰人：David Axmark、Allan Larsson和Michael “Monty” Widenius在瑞典创办的。</p>
+<p>在2008年初，Sun Microsystems收购了MySQL AB公司。在2009年，Oracle收购了Sun公司，使MySQL并入Oracle的数据库产品线。 </p>
+<a id="more"></a>
+
+<h3 id="表"><a href="#表" class="headerlink" title="表"></a>表</h3><p>表(table)是一种<strong>结构化的文件</strong>，可以用来存储特定类型的数据，如：学生信息，课程信息，都可以放到表中。另外表都有特定的名称，而且不能重复。表中具有几个概念：列、行、主键。 列叫做字段(Column),行叫做表中的记录,每一个字段都有:字段名称/字段数据类型/字段约束/字段长度</p>
+<table>
+<thead>
+<tr>
+<th>学号（主键）</th>
+<th>姓名</th>
+<th>性别</th>
+<th>年龄</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>00001</td>
+<td>张三</td>
+<td>男</td>
+<td>20</td>
+</tr>
+</tbody></table>
+<h3 id="SQL的分类"><a href="#SQL的分类" class="headerlink" title="SQL的分类"></a>SQL的分类</h3><p><strong>数据查询语言(DQL-Data Query Language)</strong> </p>
+<p><strong>代表关键字:select</strong> </p>
+<p><strong>数据操纵语言(DML-Data Manipulation Language)</strong></p>
+<p><strong>代表关键字:insert,delete,update</strong></p>
+<p>数据定义语言(DDL-Data Definition Language)</p>
+<p>代表关键字:create ,drop,alter,</p>
+<p>事务控制语言(TCL-Transactional Control Language)</p>
+<p>代表关键字:commit ,rollback;</p>
+<p>数据控制语言(DCL-Data Control Language)</p>
+<p>代表关键字:grant,revoke.</p>
+<h2 id="常见命令"><a href="#常见命令" class="headerlink" title="常见命令"></a>常见命令</h2><h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><p><code>create database 数据库名称</code></p>
+<p><code>use 数据库名称</code></p>
+<h3 id="查询当前使用的数据库"><a href="#查询当前使用的数据库" class="headerlink" title="查询当前使用的数据库"></a>查询当前使用的数据库</h3><p><code>select database();</code></p>
+<p>查询数据库版本也可以使用</p>
+<p><code>select  version();</code></p>
+<h3 id="终止一条语句"><a href="#终止一条语句" class="headerlink" title="终止一条语句"></a>终止一条语句</h3><p>如果想要终止一条正在编写的语句，可键入\c。</p>
+<h3 id="退出mysql"><a href="#退出mysql" class="headerlink" title="退出mysql"></a>退出mysql</h3><p>可使用\q、QUIT或EXIT：</p>
+<p>如：</p>
+<p><code>mysql&gt; \q (ctrl+c)</code></p>
+<h3 id="查看表结构"><a href="#查看表结构" class="headerlink" title="查看表结构"></a>查看表结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show databases; #查看和指定现有的数据库</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1giwb1e5o3vj30ci0fg75a.jpg" alt="image-20200919215834498"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use mail_oms; #指定当前缺省数据库</span><br></pre></td></tr></table></figure>
+
+<p>mail_pms&gt; use mail_oms<br>[2020-09-19 21:59:20] completed in 142 ms</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show tables  #查看当前库中的表</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1giwb3fajalj30fq0bot9l.jpg" alt="image-20200919220033275"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">desc oms_order_item; #查看表的结构</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1giwb53m9y3j317c0qwq81.jpg" alt="image-20200919220210313"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show create table &lt;table name&gt;; #查勘表的创建语句</span><br></pre></td></tr></table></figure>
+
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><h3 id="简单查询"><a href="#简单查询" class="headerlink" title="简单查询"></a>简单查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#查询一个字段</span><br><span class="line">select ename from emp;</span><br><span class="line">#查询多个字段</span><br><span class="line">select empno, ename from emp;</span><br><span class="line">#查询全部字段</span><br><span class="line">select * from emp;</span><br></pre></td></tr></table></figure>
+
+<p>采用select * from emp，虽然简单，但是*号不是很明确，建议查询全部字段将相关字段写到select语句的后面,在以后java连接数据库的时候,是需要在java程序中编写SQL语句的,这个时候编写的SQL语句不建议使用select * 这种形式,建议写明字段,这样可读性强.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">列出员工的编号，姓名和年薪</span><br><span class="line">select empno, ename, sal*12 from emp;</span><br><span class="line">select empno as ‘员工编号’, ename as ‘员工姓名’, sal*12 as ‘年薪’ from emp;</span><br><span class="line">注意:字符串必须添加单引号 | 双引号</span><br><span class="line">可以采用as关键字重命名表字段，其实as也可以省略，如：</span><br><span class="line">select empno  &quot;员工编号&quot;, ename  &quot;员工姓名&quot;, sal*12  &quot;年薪&quot; from emp;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="条件查询"><a href="#条件查询" class="headerlink" title="条件查询"></a>条件查询</h3><p>条件查询需要用到where语句，where必须放到from语句表的后面</p>
+<p>支持如下运算符</p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>=</td>
+<td>等于</td>
+</tr>
+<tr>
+<td>&lt;&gt;或!=</td>
+<td>不等于</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>小于</td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>&gt;=</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td>between … and ….</td>
+<td>两个值之间,<strong>等同于 &gt;= and &lt;=</strong></td>
+</tr>
+<tr>
+<td>is null</td>
+<td>为null（is not null 不为空）</td>
+</tr>
+<tr>
+<td><strong>and</strong></td>
+<td>并且</td>
+</tr>
+<tr>
+<td><strong>or</strong></td>
+<td>或者</td>
+</tr>
+<tr>
+<td>in</td>
+<td>包含，相当于多个or（not in不在这个范围中）</td>
+</tr>
+<tr>
+<td>not</td>
+<td>not可以取非，主要用在is 或in中</td>
+</tr>
+<tr>
+<td>like</td>
+<td>like称为模糊查询，支持%或下划线匹配  %匹配任意个字符  下划线，一个下划线只匹配一个字符</td>
+</tr>
+</tbody></table>
+<h3 id="排序数据"><a href="#排序数据" class="headerlink" title="排序数据"></a>排序数据</h3><p>单一字段排序</p>
+<p>排序采用order by子句，order by后面跟上排序字段，排序字段可以放多个，多个采用逗号间隔，order by默认采用升序，如果存在where子句那么order by必须放到where语句的后面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">按照薪水由小到大排序(系统默认由小到大)</span><br><span class="line">select * from emp order by sal;</span><br><span class="line">取得job为MANAGER的员工，按照薪水由小到大排序(系统默认由小到大)</span><br><span class="line">select * from emp where job&#x3D;&#39;MANAGER&#39; order by sal;</span><br><span class="line">如果包含where语句order by必须放到where后面，如果没有where语句order by放到表的后面</span><br><span class="line"># select * from emp order by sal where job&#x3D;&#39;MANAGER&#39;; 错误示范</span><br><span class="line">按照多个字段排序，如：首先按照job排序，再按照sal排序</span><br><span class="line">select * from emp order by job,sal;</span><br><span class="line">手动指定按照薪水由小到大排序</span><br><span class="line">select * from emp order by sal asc;</span><br><span class="line">手动指定按照薪水由大到小排序</span><br><span class="line">select * from emp order by sal desc;</span><br><span class="line">按照job和薪水倒序</span><br><span class="line">select * from emp order by job desc, sal desc;</span><br><span class="line"># 如果采用多个字段排序，如果根据第一个字段排序重复了，会根据第二个字段排序</span><br><span class="line">按照薪水升序</span><br><span class="line">select * from emp order by 6; #使用字段的位置来排序 不建议使用此种方式，采用数字含义不明确，程序不健壮</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>#分组函数/聚合函数/多行处理函数</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>count</td>
+<td>取得记录数</td>
+</tr>
+<tr>
+<td>sum</td>
+<td>求和</td>
+</tr>
+<tr>
+<td>avg</td>
+<td>取平均</td>
+</tr>
+<tr>
+<td>max</td>
+<td>取最大的数</td>
+</tr>
+<tr>
+<td>min</td>
+<td>取最小的数</td>
+</tr>
+</tbody></table>
+<h3 id="count"><a href="#count" class="headerlink" title="count"></a>count</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">取得所有的员工数</span><br><span class="line">select count(*) from emp;</span><br><span class="line">取得津贴不为null员工数</span><br><span class="line">select count(comm) from emp;</span><br><span class="line">取得工作岗位的个数</span><br><span class="line">select count(distinct job ) from emp;</span><br></pre></td></tr></table></figure>
+
+<h3 id="sum"><a href="#sum" class="headerlink" title="sum"></a>sum</h3><ul>
+<li>Sum可以取得某一个列的和，null会被忽略</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">取得薪水的合计</span><br><span class="line">select sum(sal) from emp;</span><br><span class="line">取得津贴的合计</span><br><span class="line">select sum(comm) from emp;</span><br><span class="line">取得薪水的合计（sal+comm）</span><br><span class="line">#select sum(sal+comm) from emp;</span><br><span class="line">#comm字段有null值，所以无法计算，sum会忽略掉，正确的做法是将comm字段转换成0</span><br><span class="line">select sum(sal+IFNULL(comm, 0)) from emp;</span><br></pre></td></tr></table></figure>
+
+<h3 id="avg"><a href="#avg" class="headerlink" title="avg"></a>avg</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">取得平均薪水</span><br><span class="line">select avg(sal) from emp;</span><br></pre></td></tr></table></figure>
+
+<h3 id="max-min"><a href="#max-min" class="headerlink" title="max/min"></a>max/min</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">取得最高薪水</span><br><span class="line">select max(sal) from emp;</span><br><span class="line">取得最晚入职得员工</span><br><span class="line">select max(str_to_date (hiredate, &#39;%Y-%m-%d&#39;)) from emp;</span><br><span class="line">取得最低薪水</span><br><span class="line">select min(sal) from emp;</span><br><span class="line">取得最早入职得员工（可以不使用str_to_date转换）</span><br><span class="line">select min(str_to_date(hiredate, &#39;%Y-%m-%d&#39;)) from emp;</span><br></pre></td></tr></table></figure>
+
+<h3 id="组合聚合函数"><a href="#组合聚合函数" class="headerlink" title="组合聚合函数"></a>组合聚合函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">可以将这些聚合函数都放到select中一起使用</span><br><span class="line">select count(*),sum(sal),avg(sal),max(sal),min(sal) from emp;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分组查询"><a href="#分组查询" class="headerlink" title="分组查询"></a>分组查询</h2><h3 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">取得每个工作岗位的工资合计，要求显示岗位名称和工资合计</span><br><span class="line">select job, sum(sal) from emp group by job;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="having"><a href="#having" class="headerlink" title="having"></a>having</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">如果想对分组数据再进行过滤需要使用having子句</span><br><span class="line">取得每个岗位的平均工资大于2000</span><br><span class="line">select job, avg(sal) from emp group by job having avg(sal) &gt;2000;</span><br></pre></td></tr></table></figure>
+
+<h3 id="select语句总结"><a href="#select语句总结" class="headerlink" title="select语句总结"></a>select语句总结</h3><p>一个完整的select语句格式如下</p>
+<p>  select 字段  from 表名  where …….  group by ……..  having …….(就是为了过滤分组后的数据而存在的—不可以单独的出现)  order by ……..  </p>
+<p>以上语句的执行顺序</p>
+<ol>
+<li><p>首先执行where语句过滤原始数据</p>
+</li>
+<li><p>执行group by进行分组</p>
+</li>
+<li><p>执行having对分组数据进行操作</p>
+</li>
+<li><p>执行select选出数据</p>
+</li>
+<li><p>执行order by排序</p>
+</li>
+</ol>
+<p>原则：能在where中过滤的数据，尽量在where中过滤，效率较高。having的过滤是专门对分组之后的数据进行过滤的。</p>
+<h2 id="连接查询"><a href="#连接查询" class="headerlink" title="连接查询"></a>连接查询</h2><p>连接查询：也可以叫跨表查询，需要关联多个表进行查询</p>
+<h3 id="SQL92语法，已经废弃"><a href="#SQL92语法，已经废弃" class="headerlink" title="SQL92语法，已经废弃"></a>SQL92语法，已经废弃</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">显示每个员工信息，并显示所属的部门名称</span><br><span class="line">select ename, dname from emp, dept;</span><br><span class="line">#输出了56条数据，其实就是两个表记录的成绩，这种情况我们称为：“笛卡儿乘积”，出现错误的原因是：没有指定连接条件</span><br><span class="line">select emp.ename, dept.dname from emp, dept where emp.deptno&#x3D;dept.deptno;</span><br><span class="line">也可以使用别名</span><br><span class="line">select e.ename, d.dname from emp e, dept d where e.deptno&#x3D;d.deptno;</span><br><span class="line">#输出正确，因为加入了正确的连接条件</span><br><span class="line">以上查询也称为 “内连接”，只查询相等的数据（连接条件相等的数据）</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL99语法"><a href="#SQL99语法" class="headerlink" title="SQL99语法"></a>SQL99语法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">采用SQL92语法：</span><br><span class="line">select e.ename, e.sal, d.dname from emp e, dept d where e.deptno&#x3D;d.deptno and  e.sal &gt; 2000;</span><br><span class="line">采用SQL99语法：</span><br><span class="line">select e.ename, e.sal, d.dname from emp e join dept d on e.deptno&#x3D;d.deptno where e.sal&gt;2000;</span><br><span class="line">或</span><br><span class="line">select e.ename, e.sal, d.dname from emp e inner join dept d on e.deptno&#x3D;d.deptno where e.sal&gt;2000;</span><br><span class="line">在实际中一般不加inner关键字</span><br></pre></td></tr></table></figure>
+
+<p>自连接</p>
+<p>就是连接的两个表是同一个表：需要使用表的别名来区分。</p>
+<h3 id="外连接"><a href="#外连接" class="headerlink" title="外连接"></a>外连接</h3><h4 id="什么是外连接，与内连接有什么不同"><a href="#什么是外连接，与内连接有什么不同" class="headerlink" title="什么是外连接，与内连接有什么不同"></a>什么是外连接，与内连接有什么不同</h4><ul>
+<li>内连接：<ul>
+<li>假设A，B两张表进行连接，使用内联接，凡是A表与B表能够匹配上的记录查询出来，这就是内连接，AB两张表没有主次之分，两张表是平等的。</li>
+</ul>
+</li>
+<li>外连接：<ul>
+<li>假设A，B两张表进行连接，使用外联接，AB两张表中有一张表是主表，一张表是副表，主要查询主表中的数据，捎带着查询副表的数据集，当附表中没有和主表匹配的数据的时候，副表会自动模拟出NULL与之匹配</li>
+</ul>
+</li>
+<li>外连接的分类<ul>
+<li>左外连接：表示左边的这张表示主表</li>
+<li>有外连接：表示右边的这张表示主表</li>
+</ul>
+</li>
+</ul>
+<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><ul>
+<li><p>内连接</p>
+<ul>
+<li><p>表1  inner join  表2  on  关联条件</p>
+</li>
+<li><p>做连接查询的时候一定要写上关联条件</p>
+</li>
+<li><p>inner 可以省略</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>外连接</p>
+<ul>
+<li>左外连接<ul>
+<li>表1  left  outer  join  表2  on  关联条件</li>
+<li>做连接查询的时候一定要写上关联条件</li>
+<li>outer  可以省略</li>
+</ul>
+</li>
+<li>右外连接<ul>
+<li>表1  right  outer  join  表2  on  关联条件</li>
+<li>做连接查询的时候一定要写上关联条件</li>
+<li>outer  可以省略</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">*左外连接（左连接）和右外连接（右连接）的区别：</span><br><span class="line">*左连接以左面的表为准和右边的表比较，和左表相等的不相等都会显示出来，右表符合条件的显示,不符合条件的不显示</span><br><span class="line">*右连接恰恰相反，以上左连接和右连接也可以加入outer关键字，但一般不建议这种写法，如：</span><br><span class="line">select e.ename, e.sal, d.dname from emp e right outer join dept d on e.deptno&#x3D;d.deptno;</span><br><span class="line">select e.ename, e.sal, d.dname from dept d left outer join emp e on e.deptno&#x3D;d.deptno;</span><br><span class="line">左连接能完成的功能右连接一定可以完成</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h2><h4 id="在where语句中使用子查询"><a href="#在where语句中使用子查询" class="headerlink" title="在where语句中使用子查询"></a>在where语句中使用子查询</h4><p>也就是在where语句中加入select语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">查询员工编号包含管理者编号的</span><br><span class="line">select empno, ename from emp where empno in(select mgr from emp where mgr is not null);</span><br><span class="line">取得大于平均薪水的员工</span><br><span class="line">select empno, ename, sal from emp where sal &gt; (select avg(sal) from emp);</span><br><span class="line">查询员工信息，查询哪些人是管理者，要求显示出其员工编号和员工姓名</span><br><span class="line">首先取得管理者的编号，去除重复的</span><br><span class="line">select distinct mgr from emp where mgr is not null;</span><br><span class="line">将以上查询作为一张表，放到from语句的后面</span><br><span class="line">使用92语法：</span><br><span class="line">select e.empno, e.ename from emp e, (select distinct mgr from emp where mgr is not null) m where e.empno&#x3D;m.mgr;</span><br><span class="line">使用99语法：</span><br><span class="line">select e.empno, e.ename from emp e join (select distinct mgr from emp where mgr is not null) m on e.empno&#x3D;m.mgr;</span><br></pre></td></tr></table></figure>
+
+<h4 id="在from语句中使用子查询"><a href="#在from语句中使用子查询" class="headerlink" title="在from语句中使用子查询"></a>在from语句中使用子查询</h4><p>可以将该子查询看做一张表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1、首先取得各个部门的平均薪水</span><br><span class="line">select deptno, avg(sal) avg_sal from emp group by deptno;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2、将部门的平均薪水作为一张表与薪水等级表建立连接，取得等级</span><br><span class="line">select deptno,avg(sal) avg_sal from emp group by deptno;</span><br><span class="line">select * from salgrade;</span><br><span class="line">select a.deptno,a.avg_sal,g.grade from (select deptno,avg(sal) avg_sal from emp group by deptno ) a join salgrade g on a.avg_sal between g.losal and hisal;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>练习：求每个部门平均的薪水等级：</p>
+<ol>
+<li><p>找出每个员工的薪水等级：</p>
+<p><code>select e.ename,e.sal,e.deptna,s.grade from emp e join salgrade s on e.sal between s.losal and s.hisal</code></p>
+</li>
+<li><p>找出员工薪水等级的平均值</p>
+<p><code>grope by e.dept.no</code></p>
+</li>
+</ol>
+<h4 id="Selcet-后面连接子查询："><a href="#Selcet-后面连接子查询：" class="headerlink" title="Selcet 后面连接子查询："></a>Selcet 后面连接子查询：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">查询员工信息，并显示出员工所属的部门名称</span><br><span class="line">第一种做法，将员工表和部门表连接</span><br><span class="line">select e.ename, d.dname from emp e, dept d where e.deptno&#x3D;d.deptno;</span><br><span class="line">第二种做法，在select语句中再次嵌套select语句完成部分名称的查询</span><br><span class="line">select e.ename, (select d.dname from dept d where e.deptno&#x3D;d.deptno) as dname from emp e;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="其他查询"><a href="#其他查询" class="headerlink" title="其他查询"></a>其他查询</h2><h3 id="union"><a href="#union" class="headerlink" title="union"></a>union</h3><p>可以拼接两个不相关的表的连接取得前5条数据</p>
+<p>  select * from emp limit 5;  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">查询job包含MANAGER和包含SALESMAN的员工</span><br><span class="line">select * from emp where job in(&#39;MANAGER&#39;, &#39;SALESMAN&#39;);</span><br><span class="line">采用union来合并</span><br><span class="line">select * from emp where job&#x3D;&#39;MANAGER&#39;</span><br><span class="line">union</span><br><span class="line">select * from emp where job&#x3D;&#39;SALESMAN&#39;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="limit的使用"><a href="#limit的使用" class="headerlink" title="limit的使用"></a>limit的使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">select * from table limit m,n</span><br><span class="line">其中m是指记录开始的index，从0开始，表示第一条记录</span><br><span class="line">n是指从第m+1条开始，取n条。</span><br><span class="line">select * from tablename limit 2,4</span><br><span class="line">即取出第3条至第6条，4条记录</span><br><span class="line">取得前5条数据</span><br><span class="line">select * from emp  limit 5;</span><br><span class="line">从第二条开始取两条数据</span><br><span class="line">select * from emp  limit 1,2;</span><br><span class="line">取得薪水最高的前5名 </span><br><span class="line">select  * from emp e  order by e.sal desc limit 5;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/18/utils/Git/" rel="prev" title="Git基础学习">
+      <i class="fa fa-chevron-left"></i> Git基础学习
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">SQL概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.</span> <span class="nav-text">什么是数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySql%E6%A6%82%E8%BF%B0"><span class="nav-number">3.</span> <span class="nav-text">MySql概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8"><span class="nav-number">4.</span> <span class="nav-text">表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">5.</span> <span class="nav-text">SQL的分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4"><span class="nav-number"></span> <span class="nav-text">常见命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E5%BD%93%E5%89%8D%E4%BD%BF%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.</span> <span class="nav-text">查询当前使用的数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%88%E6%AD%A2%E4%B8%80%E6%9D%A1%E8%AF%AD%E5%8F%A5"><span class="nav-number">3.</span> <span class="nav-text">终止一条语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%80%E5%87%BAmysql"><span class="nav-number">4.</span> <span class="nav-text">退出mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="nav-number">5.</span> <span class="nav-text">查看表结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2"><span class="nav-number"></span> <span class="nav-text">查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.</span> <span class="nav-text">简单查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2"><span class="nav-number">2.</span> <span class="nav-text">条件查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E6%95%B0%E6%8D%AE"><span class="nav-number">3.</span> <span class="nav-text">排序数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number"></span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#count"><span class="nav-number">1.</span> <span class="nav-text">count</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sum"><span class="nav-number">2.</span> <span class="nav-text">sum</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#avg"><span class="nav-number">3.</span> <span class="nav-text">avg</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#max-min"><span class="nav-number">4.</span> <span class="nav-text">max&#x2F;min</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0"><span class="nav-number">5.</span> <span class="nav-text">组合聚合函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2"><span class="nav-number"></span> <span class="nav-text">分组查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#group-by"><span class="nav-number">1.</span> <span class="nav-text">group by</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#having"><span class="nav-number">2.</span> <span class="nav-text">having</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select%E8%AF%AD%E5%8F%A5%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">select语句总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2"><span class="nav-number"></span> <span class="nav-text">连接查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL92%E8%AF%AD%E6%B3%95%EF%BC%8C%E5%B7%B2%E7%BB%8F%E5%BA%9F%E5%BC%83"><span class="nav-number">1.</span> <span class="nav-text">SQL92语法，已经废弃</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL99%E8%AF%AD%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">SQL99语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">外连接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%A4%96%E8%BF%9E%E6%8E%A5%EF%BC%8C%E4%B8%8E%E5%86%85%E8%BF%9E%E6%8E%A5%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C"><span class="nav-number">3.1.</span> <span class="nav-text">什么是外连接，与内连接有什么不同</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">语法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="nav-number"></span> <span class="nav-text">子查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8where%E8%AF%AD%E5%8F%A5%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="nav-number">0.1.</span> <span class="nav-text">在where语句中使用子查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8from%E8%AF%AD%E5%8F%A5%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="nav-number">0.2.</span> <span class="nav-text">在from语句中使用子查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Selcet-%E5%90%8E%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%AD%90%E6%9F%A5%E8%AF%A2%EF%BC%9A"><span class="nav-number">0.3.</span> <span class="nav-text">Selcet 后面连接子查询：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%9F%A5%E8%AF%A2"><span class="nav-number"></span> <span class="nav-text">其他查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#union"><span class="nav-number">1.</span> <span class="nav-text">union</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#limit%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">limit的使用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">李寿贤</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李寿贤</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"xb8ocBOeUvnh1ClRKD6b7Vwm-gzGzoHsz","app_key":"ODH211TGDI1jVYfBVxifNiXt","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '9AvQGweVbH47hbtztejqnkta-gzGzoHsz',
+      appKey     : 'lo0cfhvPh5MqPkgzHzT5n0Az',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

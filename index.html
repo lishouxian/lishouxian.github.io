@@ -155,6 +155,283 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="lishx.com/2020/09/22/utils/SQL-basic2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="李寿贤">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lishouxian's BLOG">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/22/utils/SQL-basic2/" class="post-title-link" itemprop="url">sql基础2</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-22 21:13:45" itemprop="dateCreated datePublished" datetime="2020-09-22T21:13:45+08:00">2020-09-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-10-30 14:54:22" itemprop="dateModified" datetime="2020-10-30T14:54:22+08:00">2020-10-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/utils/" itemprop="url" rel="index"><span itemprop="name">utils</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/09/22/utils/SQL-basic2/" class="post-meta-item leancloud_visitors" data-flag-title="sql基础2" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/09/22/utils/SQL-basic2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/22/utils/SQL-basic2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="表"><a href="#表" class="headerlink" title="表"></a>表</h2><p>数据库的表名一般建议使用<code>t_</code>开头</p>
+<h3 id="创建表的语法格式"><a href="#创建表的语法格式" class="headerlink" title="创建表的语法格式"></a>创建表的语法格式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">create table tableName(</span><br><span class="line">  columnName dataType(length),</span><br><span class="line">  ………………..</span><br><span class="line">  columnName dataType(length)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>MySql常用数据类型</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Char(长度)</td>
+<td>定长字符串，存储空间大小固定，适合作为主键或外键</td>
+</tr>
+<tr>
+<td>Varchar(长度)</td>
+<td>变长字符串，存储空间等于实际数据空间</td>
+</tr>
+<tr>
+<td>double(有效数字位数，小数位)</td>
+<td>数值型</td>
+</tr>
+<tr>
+<td>Float(有效数字位数，小数位)</td>
+<td>数值型</td>
+</tr>
+<tr>
+<td>Int( 长度)</td>
+<td>整型</td>
+</tr>
+<tr>
+<td>bigint(长度)</td>
+<td>长整型</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>日期型 年月日</td>
+</tr>
+<tr>
+<td>DateTime</td>
+<td>日期型 年月日 时分秒 毫秒</td>
+</tr>
+<tr>
+<td>time</td>
+<td>日期型 时分秒</td>
+</tr>
+<tr>
+<td>BLOB</td>
+<td>Binary Large OBject（二进制大对象）</td>
+</tr>
+<tr>
+<td>CLOB</td>
+<td>Character Large OBject（字符大对象）</td>
+</tr>
+<tr>
+<td>其它…………………</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>当字符的长度不确定时，应当使用varchar，当长度是确定的时，例如性别，生日等，使用char，同时使用char的范围较小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#建立学生信息表，字段包括：学号、姓名、性别、出生日期、email、班级标识</span><br><span class="line">create table t_student(</span><br><span class="line">	student_id  	int(10),</span><br><span class="line">	student_name 	varchar(20),</span><br><span class="line">	sex		char(2),</span><br><span class="line">	birthday	date,</span><br><span class="line">	email		varchar(30),</span><br><span class="line">	classes_id	int(3)	</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="操作表的语法格式"><a href="#操作表的语法格式" class="headerlink" title="操作表的语法格式"></a>操作表的语法格式</h3><h4 id="添加字段"><a href="#添加字段" class="headerlink" title="添加字段"></a>添加字段</h4><p>如：需求发生改变，需要向t_student中加入联系电话字段，字段名称为：contatct_tel 类型为varchar(40)</p>
+<p>  alter table t_student add contact_tel varchar(40);  </p>
+<h4 id="修改字段"><a href="#修改字段" class="headerlink" title="修改字段"></a>修改字段</h4><p>如：student_name无法满足需求，长度需要更改为100</p>
+<p>  alter table t_student modify student_name  varchar(100) ;  </p>
+<h4 id="删除字段"><a href="#删除字段" class="headerlink" title="删除字段"></a>删除字段</h4><p>如：删除联系电话字段</p>
+<p>  alter table t_student drop contact_tel;  </p>
+<h3 id="操作数据的语法格式"><a href="#操作数据的语法格式" class="headerlink" title="操作数据的语法格式"></a>操作数据的语法格式</h3><p>插入数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">insert into t_student(student_id, student_name, birthday, email, classes_id) </span><br><span class="line">values</span><br><span class="line">(1002, &#39;zhangsan&#39;, &#39;1988-01-01&#39;, &#39;qqq@163.com&#39;, 10)</span><br></pre></td></tr></table></figure>
+
+<p>修改数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">语法格式：</span><br><span class="line">update 表名 set 字段名称1&#x3D;需要修改的值1, 字段名称2&#x3D;需要修改的值2 where …….</span><br><span class="line">将job为manager的员工的工资上涨10%</span><br><span class="line">update emp set sal&#x3D;sal+sal*0.1 where job&#x3D;&#39;MANAGER&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>删除数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">语法格式：</span><br><span class="line">Delete from表名 where 。。。。。</span><br><span class="line">删除津贴为500的员工</span><br><span class="line">delete from emp where comm&#x3D;500;</span><br><span class="line">删除津贴为null的员工</span><br><span class="line">delete from emp where comm is null;</span><br></pre></td></tr></table></figure>
+
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>事务的ACID属性</p>
+<ol>
+<li><p><strong>原子性（Atomicity）</strong><br>原子性是指事务是一个不可分割的工作单位，事务中的操作要么都发生，要么都不发生。 </p>
+</li>
+<li><p><strong>一致性（Consistency）</strong><br>事务必须使数据库从一个一致性状态变换到另外一个一致性状态。</p>
+</li>
+<li><p><strong>隔离性（Isolation）</strong><br>事务的隔离性是指一个事务的执行不能被其他事务干扰，即一个事务内部的操作及使用的数据对并发的其他事务是隔离的，并发执行的各个事务之间不能互相干扰。</p>
+</li>
+<li><p><strong>持久性（Durability）</strong><br>持久性是指一个事务一旦被提交，它对数据库中数据的改变就是永久性的，接下来的其他操作和数据库故障不应该对其有任何影响。</p>
+</li>
+</ol>
+<h4 id="数据库的并发问题"><a href="#数据库的并发问题" class="headerlink" title="数据库的并发问题"></a>数据库的并发问题</h4><ul>
+<li>对于同时运行的多个事务, 当这些事务访问数据库中相同的数据时, 如果没有采取必要的隔离机制, 就会导致各种并发问题:<ul>
+<li><strong>丢失修改</strong>：一个事务的更新操作被另外一个事务的更新操作替换，例如：T1 和 T2 两个事务都对一个数据进行修改，T1 先修改并提交生效，T2 随后修改，T2 的修改覆盖了 T1 的修改。</li>
+<li><strong>脏读</strong>: 对于两个事务 T1, T2, T1 读取了已经被 T2 更新但还<strong>没有被提交</strong>的字段。之后, 若 T2 回滚, T1读取的内容就是临时且无效的。</li>
+<li><strong>不可重复读</strong>: 对于两个事务T1, T2, T1 读取了一个字段, 然后 T2 <strong>更新</strong>了该字段。之后, T1再次读取同一个字段, 值就不同了。</li>
+<li><strong>幻读</strong>: 对于两个事务T1, T2, T1 从一个表中读取了一个字段, 然后 T2 在该表中<strong>插入</strong>了一些新的行。之后, 如果 T1 再次读取同一个表, 就会多出几行。</li>
+</ul>
+</li>
+<li><strong>数据库事务的隔离性</strong>: 数据库系统必须具有隔离并发运行各个事务的能力, 使它们不会相互影响, 避免各种并发问题。</li>
+<li>一个事务与其他事务隔离的程度称为隔离级别。数据库规定了多种事务隔离级别, 不同隔离级别对应不同的干扰程度, <strong>隔离级别越高, 数据一致性就越好, 但并发性越弱。</strong></li>
+</ul>
+<h4 id="四种隔离级别"><a href="#四种隔离级别" class="headerlink" title="四种隔离级别"></a>四种隔离级别</h4><ul>
+<li><p>数据库提供的4种事务隔离级别：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gix6gw0a1mj30lu0680ur.jpg" alt="1555586275271"></p>
+</li>
+<li><p>Oracle 支持的 2 种事务隔离级别：<strong>READ COMMITED</strong>, SERIALIZABLE。 Oracle 默认的事务隔离级别为: <strong>READ COMMITED</strong> 。</p>
+</li>
+</ul>
+<ul>
+<li>Mysql 支持 4 种事务隔离级别。Mysql 默认的事务隔离级别为: **REPEATABLE READ。</li>
+</ul>
+<h2 id="封锁"><a href="#封锁" class="headerlink" title="封锁"></a>封锁</h2><h3 id="封锁粒度"><a href="#封锁粒度" class="headerlink" title="封锁粒度"></a>封锁粒度</h3><p>MySQL 中提供了两种封锁粒度：行级锁以及表级锁。</p>
+<p>应该尽量只锁定需要修改的那部分数据，而不是所有的资源。锁定的数据量越少，发生锁争用的可能就越小，系统的并发程度就越高。</p>
+<p>但是加锁需要消耗资源，锁的各种操作（包括获取锁、释放锁、以及检查锁状态）都会增加系统开销。因此封锁粒度越小，系统开销就越大。</p>
+<p>在选择封锁粒度时，需要在锁开销和并发程度之间做一个权衡。</p>
+<h3 id="封锁类型"><a href="#封锁类型" class="headerlink" title="封锁类型"></a>封锁类型</h3><h4 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h4><ul>
+<li>互斥锁（Exclusive），简写为 X 锁，又称写锁。</li>
+<li>共享锁（Shared），简写为 S 锁，又称读锁。</li>
+</ul>
+<p>有以下两个规定：</p>
+<ul>
+<li>一个事务对数据对象 A 加了 X 锁，就可以对 A 进行读取和更新。加锁期间其它事务不能对 A 加任何锁。</li>
+<li>一个事务对数据对象 A 加了 S 锁，可以对 A 进行读取操作，但是不能进行更新操作。加锁期间其它事务能对 A 加 S 锁，但是不能加 X 锁。</li>
+</ul>
+<h4 id="意向锁"><a href="#意向锁" class="headerlink" title="意向锁"></a>意向锁</h4><p>使用意向锁（Intention Locks）可以更容易地支持多粒度封锁。</p>
+<p>在存在行级锁和表级锁的情况下，事务 T 想要对表 A 加 X 锁，就需要先检测是否有其它事务对表 A 或者表 A 中的任意一行加了锁，那么就需要对表 A 的每一行都检测一次，这是非常耗时的。</p>
+<p>意向锁在原来的 X/S 锁之上引入了 IX/IS，IX/IS 都是表锁，用来表示一个事务想要在表中的某个数据行上加 X 锁或 S 锁。有以下两个规定：</p>
+<ul>
+<li>一个事务在获得某个数据行对象的 S 锁之前，必须先获得表的 IS 锁或者更强的锁；</li>
+<li>一个事务在获得某个数据行对象的 X 锁之前，必须先获得表的 IX 锁。</li>
+</ul>
+<p>通过引入意向锁，事务 T 想要对表 A 加 X 锁，只需要先检测是否有其它事务对表 A 加了 X/IX/S/IS 锁，如果加了就表示有其它事务正在使用这个表或者表中某一行的锁，因此事务 T 加 X 锁失败。</p>
+<p>解释如下：</p>
+<ul>
+<li>任意 IS/IX 锁之间都是兼容的，因为它们只表示想要对表加锁，而不是真正加锁；</li>
+<li>这里兼容关系针对的是表级锁，而表级的 IX 锁和行级的 X 锁兼容，两个事务可以对两个数据行加 X 锁。（事务 T1 想要对数据行 R1 加 X 锁，事务 T2 想要对同一个表的数据行 R2 加 X 锁，两个事务都需要对该表加 IX 锁，但是 IX 锁是兼容的，并且 IX 锁与行级的 X 锁也是兼容的，因此两个事务都能加锁成功，对同一个表中的两个数据行做修改。）</li>
+</ul>
+<h4 id="封锁协议"><a href="#封锁协议" class="headerlink" title="封锁协议"></a>封锁协议</h4><h5 id="三级封锁协议"><a href="#三级封锁协议" class="headerlink" title="三级封锁协议"></a>三级封锁协议</h5><p><strong>一级封锁协议</strong></p>
+<p>事务 T 要修改数据 A 时必须加 X 锁，直到 T 结束才释放锁。</p>
+<p>可以解决丢失修改问题，因为不能同时有两个事务对同一个数据进行修改，那么事务的修改就不会被覆盖。</p>
+<p><strong>二级封锁协议</strong></p>
+<p>在一级的基础上，要求读取数据 A 时必须加 S 锁，读取完马上释放 S 锁。</p>
+<p>可以解决读脏数据问题，因为如果一个事务在对数据 A 进行修改，根据 1 级封锁协议，会加 X 锁，那么就不能再加 S 锁了，也就是不会读入数据。</p>
+<p><strong>三级封锁协议</strong></p>
+<p>在二级的基础上，要求读取数据 A 时必须加 S 锁，直到事务结束了才能释放 S 锁。</p>
+<p>可以解决不可重复读的问题，因为读 A 时，其它事务不能对 A 加 X 锁，从而避免了在读的期间数据发生改变。</p>
+<h5 id="两段锁协议"><a href="#两段锁协议" class="headerlink" title="两段锁协议"></a>两段锁协议</h5><p>加锁和解锁分为两个阶段进行。</p>
+<p>可串行化调度是指，通过并发控制，使得并发执行的事务结果与某个串行执行的事务结果相同。串行执行的事务互不干扰，不会出现并发一致性问题。</p>
+<p>事务遵循两段锁协议是保证可串行化调度的充分条件。例如以下操作满足两段锁协议，它是可串行化调度。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lock-x(A)...lock-s(B)...lock-s(C)...unlock(A)...unlock(C)...unlock(B)Copy to clipboardErrorCopied</span><br></pre></td></tr></table></figure>
+
+<p>但不是必要条件，例如以下操作不满足两段锁协议，但它还是可串行化调度。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lock-x(A)...unlock(A)...lock-s(B)...unlock(B)...lock-s(C)...unlock(C)</span><br></pre></td></tr></table></figure>
+
+<p>MySQL 的 InnoDB 存储引擎采用两段锁协议，会根据隔离级别在需要的时候自动加锁，并且所有的锁都是在同一时刻被释放，这被称为隐式锁定。</p>
+<p>InnoDB 也可以使用特定的语句进行显示锁定：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">LOCK</span> <span class="keyword">In</span> <span class="keyword">SHARE</span> <span class="keyword">MODE</span>;</span><br><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="lishx.com/2020/09/20/utils/SQL-basic/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -169,7 +446,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/20/utils/SQL-basic/" class="post-title-link" itemprop="url">sql基础 一(查询语言)</a>
+            <a href="/2020/09/20/utils/SQL-basic/" class="post-title-link" itemprop="url">sql基础1</a>
         </h2>
 
         <div class="post-meta">
@@ -186,7 +463,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-23 14:58:33" itemprop="dateModified" datetime="2020-09-23T14:58:33+08:00">2020-09-23</time>
+                <time title="Modified: 2020-10-30 14:53:53" itemprop="dateModified" datetime="2020-10-30T14:53:53+08:00">2020-10-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -199,7 +476,7 @@
             </span>
 
           
-            <span id="/2020/09/20/utils/SQL-basic/" class="post-meta-item leancloud_visitors" data-flag-title="sql基础 一(查询语言)" title="Views">
+            <span id="/2020/09/20/utils/SQL-basic/" class="post-meta-item leancloud_visitors" data-flag-title="sql基础1" title="Views">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -1159,116 +1436,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="lishx.com/2020/08/31/algorithm/method/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="李寿贤">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lishouxian's BLOG">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/31/algorithm/method/" class="post-title-link" itemprop="url">常用的几种算法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-08-31 10:00:00" itemprop="dateCreated datePublished" datetime="2020-08-31T10:00:00+08:00">2020-08-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-05 16:51:38" itemprop="dateModified" datetime="2020-09-05T16:51:38+08:00">2020-09-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/08/31/algorithm/method/" class="post-meta-item leancloud_visitors" data-flag-title="常用的几种算法" title="Views">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/2020/08/31/algorithm/method/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/31/algorithm/method/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="二分查找（非递归）"><a href="#二分查找（非递归）" class="headerlink" title="二分查找（非递归）"></a>二分查找（非递归）</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><ul>
-<li>二分查找分为两种：递归和非递归</li>
-<li>一般情况只适用于从有序的数列中进行查找，或者将数列进行排序后进行查找</li>
-<li>时间复杂度为O(log2n)</li>
-</ul>
-<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>数组 {1,3, 8, 10, 11, 67, 100}, 编程实现二分查找， 要求使用非递归的方式完成.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> target)</span></span>&#123;</span><br><span class="line">    <span class="comment">//定义结果，左节点和右节点</span></span><br><span class="line">    <span class="keyword">int</span> res = -<span class="number">1</span>, left = <span class="number">0</span>, right = arr.length-<span class="number">1</span>;</span><br><span class="line">	<span class="comment">//使用while循环 左右节点相等时退出循环</span></span><br><span class="line">    <span class="keyword">while</span>(left &lt;= right)&#123;</span><br><span class="line">        <span class="keyword">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(arr[mid] == target)&#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(arr[mid] &gt; target)&#123;</span><br><span class="line">            right = mid;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            left = mid;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最好使用<code>[]</code>的区间，使用<code>(]</code>或<code>[)</code></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/08/31/algorithm/method/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1338,7 +1505,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

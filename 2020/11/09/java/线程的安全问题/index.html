@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.1.1">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -23,10 +23,10 @@
   <meta name="description" content="线程的安全问题原因：操作共享数据 临界区 一个程序运行多个线程本省市没有问题的 问题出在多个线程访问共享资源 多个线程读共享单元也没有问题 在多个线程对共享资源读写操作是发生指令交错，就会出现问题   一段代码块内如果存在对共享资源的多线程读写操作，  解决方法() 阻塞式的解决方案：synchronized，Lock 非阻塞式的解决方案原子变量  阻塞式的解决方法synchronized实际上是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线程的安全问题">
-<meta property="og:url" content="lishx.com/2020/11/09/java/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:url" content="https://lishx.com/2020/11/09/java/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="lishouxian&#39;s BLOG">
 <meta property="og:description" content="线程的安全问题原因：操作共享数据 临界区 一个程序运行多个线程本省市没有问题的 问题出在多个线程访问共享资源 多个线程读共享单元也没有问题 在多个线程对共享资源读写操作是发生指令交错，就会出现问题   一段代码块内如果存在对共享资源的多线程读写操作，  解决方法() 阻塞式的解决方案：synchronized，Lock 非阻塞式的解决方案原子变量  阻塞式的解决方法synchronized实际上是">
-<meta property="og:locale">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwly1gkbsejtzs8j319e0b675f.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwly1gkbt1r4rm8j31xa0cgmyu.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwly1gkbsz2m2icj32ao0qo42g.jpg">
@@ -42,12 +42,12 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwly1gkbtrbbablj317w0u07as.jpg">
 <meta property="article:published_time" content="2020-11-09T13:20:00.000Z">
 <meta property="article:modified_time" content="2020-11-10T06:51:59.292Z">
-<meta property="article:author" content="李寿贤">
+<meta property="article:author" content="zh-Hans">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://tva1.sinaimg.cn/large/0081Kckwly1gkbsejtzs8j319e0b675f.jpg">
 
-<link rel="canonical" href="lishx.com/2020/11/09/java/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/">
+<link rel="canonical" href="https://lishx.com/2020/11/09/java/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/">
 
 
 <script id="page-configurations">
@@ -56,7 +56,7 @@
     sidebar: "",
     isHome : false,
     isPost : true,
-    lang   : 'zh-Hans'
+    lang   : 'en'
   };
 </script>
 
@@ -174,12 +174,12 @@
     
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="lishx.com/2020/11/09/java/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lishx.com/2020/11/09/java/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="李寿贤">
+      <meta itemprop="name" content="zh-Hans">
       <meta itemprop="description" content="">
     </span>
 
@@ -780,7 +780,7 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">李寿贤</p>
+  <p class="site-author-name" itemprop="name">zh-Hans</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap motion-element">
@@ -832,7 +832,7 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">李寿贤</span>
+  <span class="author" itemprop="copyrightHolder">zh-Hans</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
   </div>

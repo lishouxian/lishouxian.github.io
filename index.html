@@ -155,6 +155,211 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lishx.com/2021/01/12/algorithm/%E4%BB%8E%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%88%B0%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zh-Hans">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lishouxian's BLOG">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/12/algorithm/%E4%BB%8E%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%88%B0%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/" class="post-title-link" itemprop="url">从课程表到拓扑排序</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-01-12 20:03:26 / Modified: 22:00:44" itemprop="dateCreated datePublished" datetime="2021-01-12T20:03:26+08:00">2021-01-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/01/12/algorithm/%E4%BB%8E%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%88%B0%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/" class="post-meta-item leancloud_visitors" data-flag-title="从课程表到拓扑排序" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2021/01/12/algorithm/%E4%BB%8E%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%88%B0%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/01/12/algorithm/%E4%BB%8E%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%88%B0%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>涉及题目包括</p>
+<ul>
+<li>「力扣」第 207 题：课程表（中等）；</li>
+<li>「力扣」第 210 题：课程表 II（中等）；</li>
+<li>「力扣」第 301 题：最小高度树（中等）；</li>
+<li>「力扣」第 802 题：找到最终的安全状态（中等）；</li>
+<li>「力扣」第 630 题：课程表 III（困难）；</li>
+<li>「力扣」第 329 题：矩阵中的最长递增路径（困难）；</li>
+<li>「力扣」第 1245 题：树的直径（中等）；</li>
+<li>「力扣」第 444 题：序列重建（中等）；</li>
+<li>「力扣」第 1136 题：平行课程（困难）；</li>
+<li>「力扣」第 269 题：火星词典（困难）。</li>
+</ul>
+<h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>你这个学期必须选修 <code>numCourse</code> 门课程，记为 <code>0</code> 到 <code>numCourse-1</code> 。</p>
+<p>在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们：<code>[0,1]</code></p>
+<p>给定课程总量以及它们的先决条件，请你判断是否可能完成所有课程的学习？</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: 2, [[1,0]] </span><br><span class="line">输出: true</span><br><span class="line">解释: 总共有 2 门课程。学习课程 1 之前，你需要完成课程 0。所以这是可能的。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: 2, [[1,0],[0,1]]</span><br><span class="line">输出: false</span><br><span class="line">解释: 总共有 2 门课程。学习课程 1 之前，你需要先完成课程 0；并且学习课程 0 之前，你还应先完成课程 1。这是不可能的。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ol>
+<li>输入的先决条件是由 <strong>边缘列表</strong> 表示的图形，而不是 邻接矩阵 。详情请参见<a target="_blank" rel="noopener" href="http://blog.csdn.net/woaidapaopao/article/details/51732947">图的表示法</a>。</li>
+<li>你可以假定输入的先决条件中没有重复的边。</li>
+<li><code>1 &lt;= numCourses &lt;= 10^5</code></li>
+</ol>
+<h3 id="拓扑排序"><a href="#拓扑排序" class="headerlink" title="拓扑排序"></a>拓扑排序</h3><p>在图论中，<strong>拓扑排序（Topological Sorting</strong>）是一个<strong>有向无环图（DAG, Directed Acyclic Graph）</strong>的所有顶点的线性序列。且该序列必须满足下面两个条件：</p>
+<ol>
+<li>每个顶点出现且只出现一次。</li>
+<li>若存在一条从顶点 A 到顶点 B 的路径，那么在序列中顶点 A 出现在顶点 B 的前面。</li>
+</ol>
+<p>该题的思路是通过拓扑排序判断该课程安排图是否是<strong>有向无环图(DAG)</strong> ：课程前置条件列表 <code>prerequisites</code> 可以得到课程安排图的 <strong>邻接表</strong> <code>adjacency</code>，以降低算法时间复杂度。</p>
+<h3 id="深度遍历搜索-解答207"><a href="#深度遍历搜索-解答207" class="headerlink" title="深度遍历搜索(解答207)"></a>深度遍历搜索(解答207)</h3><p>原理是通过 DFS 判断图中是否有环。</p>
+<ol>
+<li><p>使用DFS方法遍历图中的点是否形成环，</p>
+</li>
+<li><p>借助一个标志列表 <code>flags</code>，用于判断每个节点 <code>i</code> （课程）的状态</p>
+<ol>
+<li>未被 DFS 访问：<code>i == 0</code>；</li>
+<li>已被<strong>其他节点启动</strong>的 DFS 访问：<code>i == -1</code>；</li>
+<li>已被<strong>当前节点启动</strong>的 DFS 访问：<code>i == 1</code>。</li>
+</ol>
+</li>
+<li><p>对 <code>numCourses</code> 个节点依次执行 DFS，判断每个节点起步 DFS 是否存在环，若存在环直接返回 <code>False</code>。DFS 流程；</p>
+<ol>
+<li><p>终止条件：</p>
+<ol>
+<li><p>当<code> flag[i] == -1</code>，说明当前访问节点已被其他节点启动的 DFS 访问，无需再重复搜索，直接返回 <code>True</code>。</p>
+</li>
+<li><p>当 <code>flag[i] == 1</code>，说明在本轮 DFS 搜索中<code>节点 i </code>被第 2次访问，即课程安排图有环 ，直接返回<code>False</code>。</p>
+</li>
+<li><p>将当前访问<code>节点 i </code>对应<code>flag[i]</code>置 1，即标记其被本轮 DFS 访问过；</p>
+</li>
+</ol>
+</li>
+<li><p>递归访问当前<code>节点 i </code>的所有邻接节点 j，当发现环直接返回<code>False</code>；</p>
+<ol start="4">
+<li>当前节点所有邻接节点已被遍历，并没有发现环，则将当前节点 flag 置为<code>−1</code>并返回 <code>True</code>。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>若整个图 DFS 结束并未发现环，返回<code> True</code>。</p>
+</li>
+</ol>
+<p><img src="https://gitee.com/lishouxian/blog-img/raw/master/2021-01/image-20210112203428586.png" alt="image-20210112203428586"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">canFinish</span>(<span class="params">self, numCourses: int, prerequisites</span>) -&gt; bool:</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span>(<span class="params">i, adjacency, flags</span>):</span></span><br><span class="line">            <span class="keyword">if</span> flags[i] == <span class="number">1</span>: <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">if</span> flags[i] == <span class="number">-1</span>: <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            flags[i] =  <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> adjacency[i]:</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> dfs(j, adjacency, flags): <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            flags[i] = <span class="number">-1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        flags = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(numCourses)]</span><br><span class="line">        adjacency = [[] <span class="keyword">for</span> _ <span class="keyword">in</span> range(numCourses)]</span><br><span class="line">        <span class="keyword">for</span> cur, pre <span class="keyword">in</span> prerequisites:</span><br><span class="line">            adjacency[pre].append(cur)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(numCourses):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> dfs(i, adjacency, flags): <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="广度遍历搜索-解答210"><a href="#广度遍历搜索-解答210" class="headerlink" title="广度遍历搜索(解答210)"></a>广度遍历搜索(解答210)</h3><ol>
+<li>统计课程安排图中每个节点的入度，生成 入度表 <code>indegrees</code>。</li>
+<li>借助一个队列<code>queue</code>，将所有入度为 0的节点入队。</li>
+<li>当<code>queue</code>非空时，依次将队首节点出队，在课程安排图中删除此节点<code>pre</code>：<ol>
+<li>并不是真正从邻接表中删除此节点<code>pre</code>，而是将此节点对应所有邻接节点<code>cur</code>的入度<code>−1</code>，即<code>indegrees[cur] -= 1</code>。<ol>
+<li>当入度 <code>−1</code>后邻接节点<code>cur</code>的入度为<code> 0</code>，说明<code>cur</code>所有的前驱节点已经被 “删除”，此时将<code>cur</code>入队。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>在每次<code>pre</code>出队时，执行 <code>numCourses--</code>；<ol>
+<li>若整个课程安排图是有向无环图（即可以安排），则所有节点一定都入队并出队过，即完成拓扑排序。换个角度说，若课程安排图中存在环，一定有节点的入度始终不为 <code>0</code>。</li>
+<li>因此，拓扑排序出队次数等于课程个数，返回<code>numCourses == 0</code>判断课程是否可以成功安排。</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findOrder</span>(<span class="params">self, numCourses: int, prerequisites</span>):</span></span><br><span class="line">        queue = deque()</span><br><span class="line">        indegrees = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(numCourses)]</span><br><span class="line">        adjacency = [[] <span class="keyword">for</span> _ <span class="keyword">in</span> range(numCourses)]</span><br><span class="line">        <span class="keyword">for</span> cur, pre <span class="keyword">in</span> prerequisites:</span><br><span class="line">            adjacency[pre].append(cur)</span><br><span class="line">            indegrees[cur] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(numCourses):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> indegrees[i]: queue.append(i)</span><br><span class="line">        res = []</span><br><span class="line">        <span class="keyword">while</span> queue:</span><br><span class="line">            pre = queue.popleft()</span><br><span class="line">            res.append(pre)</span><br><span class="line">            numCourses -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> cur <span class="keyword">in</span> adjacency[pre]:</span><br><span class="line">                indegrees[cur] -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> indegrees[cur]: queue.append(cur)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> numCourses: <span class="keyword">return</span> res</span><br><span class="line">        <span class="keyword">else</span>: <span class="keyword">return</span>[]</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://lishx.com/2020/12/03/algorithm/%E5%8D%95%E8%B0%83%E6%A0%88%E8%A7%A3%E6%9C%80%E5%B0%8F%E5%AD%97%E5%85%B8%E5%BA%8F%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1151,116 +1356,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://lishx.com/2020/09/18/utils/design-pattern/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zh-Hans">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lishouxian's BLOG">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/18/utils/design-pattern/" class="post-title-link" itemprop="url">设计模式 一</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-18 21:13:45" itemprop="dateCreated datePublished" datetime="2020-09-18T21:13:45+08:00">2020-09-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-23 14:58:11" itemprop="dateModified" datetime="2020-09-23T14:58:11+08:00">2020-09-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/utils/" itemprop="url" rel="index"><span itemprop="name">utils</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/09/18/utils/design-pattern/" class="post-meta-item leancloud_visitors" data-flag-title="设计模式 一" title="Views">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/2020/09/18/utils/design-pattern/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/18/utils/design-pattern/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>提高代码重用性(相同的代码，不用多次编写)</p>
-<p>代码可读性(编程规范性，便于自己及其他程序猿的阅读和理解)</p>
-<p>可扩展性(当需要增加新的功能的时候，非常的方便，可维护)</p>
-<p>可靠性(程序不容易出错，可靠性高    )</p>
-<p>使程序呈现高内聚，低耦合的特性</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/18/utils/design-pattern/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1326,7 +1425,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1366,7 +1465,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
